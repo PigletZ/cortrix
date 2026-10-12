@@ -36,9 +36,9 @@ Start here:
 - [Quickstart](https://cortrix.ai/docs/get-started/quickstart/): start Cortrix with Docker, check readiness, and run a source-backed reranked query.
 - [Install with an AI Agent](https://cortrix.ai/docs/get-started/agent-quickstart/): give a terminal-capable AI Agent a version-pinned local setup and verification contract.
 - [First-value SupportOps demo](examples/first-value-supportops/README.md): run the deeper source-build verification path with versioned assertions, trace evidence, and zero-residual cleanup.
-- [Minimal agent examples](examples/minimal-agent/README.md): two short scripts for the retrieval step of an agent, one with the Python SDK and one through the MCP server.
 - [Stack fit and adoption boundaries](https://cortrix.ai/docs/resources/stack-fit/): review evidence-backed keep/add/replace/unknown decision cards.
 - [Agent access](https://cortrix.ai/docs/integrations/overview/): choose between HTTP/OpenAPI, MCP, Python SDK, and the built-in Agent.
+- [Minimal agent examples](examples/minimal-agent/README.md): two short scripts for the retrieval step of an agent, one with the Python SDK and one through the MCP server.
 - [Compatibility and known status](docs/compatibility.md): current public status for API, MCP, SDK, Agent, auth, tenant/RBAC, memory extraction, benchmarks, and security hardening.
 - [OpenAPI spec](api/openapi.yaml): endpoint paths, schemas, security schemes, and response contracts.
 - [MCP README](cortrix-mcp/README.md): MCP server setup and tool reference.
