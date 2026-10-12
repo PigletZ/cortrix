@@ -423,7 +423,9 @@ TEST_F(FileWatcherTest, NewSubdirectoryCreatedThenFileInIt) {
         std::ofstream out(test_dir_ / "newdir" / "file_in_new_dir.txt");
         out << "content";
     }
-    WaitForEvents(1, 5000);
+    // Wait for a created-file event. The event for creating "newdir" has usually
+    // arrived already, so waiting for any one event would return at once.
+    ASSERT_TRUE(WaitForCreatedFiles(1, 5000));
 
     std::lock_guard<std::mutex> lock(mu_);
     bool found = false;
