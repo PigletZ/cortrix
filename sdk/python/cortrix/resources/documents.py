@@ -36,8 +36,10 @@ PATH_BATCH = "/documents/batch"
 # on_duplicate policy values (TD-F42-BULK §2.2 options.on_duplicate).
 _ON_DUPLICATE_VALUES = frozenset({"skip", "overwrite", "error"})
 
-# Terminal async-task states (F42 DocumentTask.status enum).
-_TERMINAL_TASK_STATES = frozenset({"ready", "failed", "cancelled"})
+# Terminal async-task states. The server reports a finished task as "completed"
+# (include/cortrix/async/task_info.h); the OpenAPI DocumentTask.status enum names
+# it "ready". Both end the wait.
+_TERMINAL_TASK_STATES = frozenset({"completed", "ready", "failed", "cancelled"})
 _DEFAULT_POLL_INTERVAL = 1.0
 _DEFAULT_WAIT_TIMEOUT = 300.0
 
@@ -147,7 +149,7 @@ class Documents(SyncResource):
     ) -> DocumentTask:
         """Sync sugar: upload then poll until the task reaches a terminal state.
 
-        Returns the final ``DocumentTask`` (status ready/failed/cancelled).
+        Returns the final ``DocumentTask`` (status completed/failed/cancelled).
         Raises ``TimeoutError`` if ``timeout`` elapses first.
         """
         task = self.upload(namespace, file, filename=filename, metadata=metadata)
@@ -262,7 +264,7 @@ class AsyncDocuments(AsyncResource):
         poll_interval: float = _DEFAULT_POLL_INTERVAL,
         timeout: float = _DEFAULT_WAIT_TIMEOUT,
     ) -> DocumentTask:
-        """Async sugar: upload then poll until a terminal state (ready/failed/cancelled)."""
+        """Async sugar: upload then poll until a terminal state (completed/failed/cancelled)."""
         task = await self.upload(namespace, file, filename=filename, metadata=metadata)
         deadline = time.monotonic() + timeout
         while task.status not in _TERMINAL_TASK_STATES:

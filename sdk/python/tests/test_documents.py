@@ -131,6 +131,24 @@ def test_upload_and_wait_polls_to_terminal(api_base: str, client: Cortrix, tmp_p
 
 
 @respx.mock
+def test_upload_and_wait_stops_on_completed(api_base: str, client: Cortrix, tmp_path) -> None:
+    # "completed" is the status a running server reports for a finished task.
+    p = tmp_path / "a.txt"
+    p.write_text("hi", encoding="utf-8")
+    respx.post(api_base + "/documents").mock(
+        return_value=httpx.Response(202, json={"task_id": "t1", "status": "queued"})
+    )
+    prog = respx.get(api_base + "/documents/tasks/t1/progress")
+    prog.side_effect = [
+        httpx.Response(200, json={"task_id": "t1", "status": "processing"}),
+        httpx.Response(200, json={"task_id": "t1", "status": "completed"}),
+    ]
+    task = client.documents.upload_and_wait("ns", str(p), poll_interval=0.0)
+    assert task.status == "completed"
+    assert prog.call_count == 2
+
+
+@respx.mock
 def test_upload_and_wait_timeout_raises(api_base: str, client: Cortrix, tmp_path) -> None:
     p = tmp_path / "a.txt"
     p.write_text("hi", encoding="utf-8")
