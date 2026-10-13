@@ -36,6 +36,7 @@ Start here:
 - [Quickstart](https://cortrix.ai/docs/get-started/quickstart/): start Cortrix with Docker, check readiness, and run a source-backed reranked query.
 - [Install with an AI Agent](https://cortrix.ai/docs/get-started/agent-quickstart/): give a terminal-capable AI Agent a version-pinned local setup and verification contract.
 - [First-value SupportOps demo](examples/first-value-supportops/README.md): run the deeper source-build verification path with versioned assertions, trace evidence, and zero-residual cleanup.
+- [Partial success check](examples/partial-success/README.md): send four queries to the Quick Start and see how an incomplete result is reported in `coverage_ratio` and `namespaces_failed`.
 - [Stack fit and adoption boundaries](https://cortrix.ai/docs/resources/stack-fit/): review evidence-backed keep/add/replace/unknown decision cards.
 - [Agent access](https://cortrix.ai/docs/integrations/overview/): choose between HTTP/OpenAPI, MCP, Python SDK, and the built-in Agent.
 - [Compatibility and known status](docs/compatibility.md): current public status for API, MCP, SDK, Agent, auth, tenant/RBAC, memory extraction, benchmarks, and security hardening.
