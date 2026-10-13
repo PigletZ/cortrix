@@ -1,0 +1,186 @@
+# Publish Image — builds the release image for a published tag on native
+# linux/amd64 and linux/arm64 runners and pushes it to GitHub Container
+# Registry as one multi-platform tag.
+#
+# It publishes only an existing annotated release tag, and only when the tag
+# resolves to the full commit given as input. Each platform image must carry
+# that commit in its revision label, pass the Quick Start, and pass the same
+# Trivy HIGH/CRITICAL gate the Release Gate uses before it is pushed. Nothing
+# is tagged `latest`.
+#
+# Run the Release Gate for the same tag and commit first. This workflow does
+# not repeat its gates.
+
+name: Publish Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing release tag to publish, for example v1.0.0-rc.2
+        required: true
+        type: string
+      source_revision:
+        description: Full 40-character commit the tag must resolve to
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  identity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      SOURCE_REVISION: ${{ inputs.source_revision }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Validate the release tag and commit
+        run: |
+          if ! [[ "$SOURCE_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "source_revision must be a full lowercase commit SHA"
+            exit 1
+          fi
+          if ! [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.]+)?$ ]]; then
+            echo "release_tag must look like v1.0.0 or v1.0.0-rc.2"
+            exit 1
+          fi
+          test "$(git cat-file -t "refs/tags/$RELEASE_TAG")" = "tag" \
+            || { echo "$RELEASE_TAG is not an annotated tag in this repository"; exit 1; }
+          test "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" = "$SOURCE_REVISION" \
+            || { echo "$RELEASE_TAG does not resolve to $SOURCE_REVISION"; exit 1; }
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+
+  build:
+    needs: identity
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      packages: write
+    env:
+      SOURCE_REVISION: ${{ inputs.source_revision }}
+      CORTRIX_SOURCE_REVISION: ${{ inputs.source_revision }}
+      PLATFORM_IMAGE: ghcr.io/${{ github.repository }}:${{ inputs.release_tag }}-${{ matrix.arch }}
+      COMPOSE_PROJECT_NAME: cortrix_publish_image
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision }}
+          persist-credentials: false
+
+      - name: Build the image
+        run: |
+          docker build \
+            --build-arg "CORTRIX_SOURCE_REVISION=$SOURCE_REVISION" \
+            -t "$PLATFORM_IMAGE" \
+            -f deploy/Dockerfile .
+
+      - name: Verify the image identity
+        run: |
+          test "$(docker image inspect "$PLATFORM_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')" = "$SOURCE_REVISION"
+          test "$(docker image inspect "$PLATFORM_IMAGE" --format '{{ .Os }}/{{ .Architecture }}')" = "${{ matrix.platform }}"
+
+      - name: Run the Quick Start from the built image
+        run: |
+          docker tag "$PLATFORM_IMAGE" cortrix:quickstart
+          docker compose -f deploy/docker-compose.yml up --no-build --wait
+          curl -fsS http://127.0.0.1:8420/api/v1/system/health/ready > /tmp/ready.json
+          python3 -c 'import json; ready = json.load(open("/tmp/ready.json")); assert ready["status"] == "ready", ready'
+          curl -fsS -H 'Content-Type: application/json' \
+            -d '{"namespaces":["demo"],"query":"What does semantic storage keep close to the agents that need it?","top_k":5,"rerank":true}' \
+            http://127.0.0.1:8420/api/v1/query > /tmp/query.json
+          python3 -c 'import json; body = json.load(open("/tmp/query.json")); assert body["meta"]["coverage_ratio"] == 1 and body["results"], body["meta"]'
+          docker compose -f deploy/docker-compose.yml down --volumes
+
+      # Same scanner, version and severity gate as the Release Gate. It runs here
+      # because this job rebuilds the image, and for both platforms.
+      - name: Scan the image (hard gate)
+        run: |
+          mkdir -p artifacts
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/artifacts:/artifacts" \
+            aquasec/trivy:0.72.0 image \
+            --severity HIGH,CRITICAL \
+            --exit-code 0 \
+            --format json \
+            --output /artifacts/trivy-${{ matrix.arch }}.json \
+            "$PLATFORM_IMAGE"
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.72.0 image \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            "$PLATFORM_IMAGE"
+
+      - name: Keep the scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-${{ matrix.arch }}
+          path: artifacts/trivy-${{ matrix.arch }}.json
+          if-no-files-found: ignore
+
+      - name: Push the platform image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker push "$PLATFORM_IMAGE"
+          docker image inspect "$PLATFORM_IMAGE" --format '{{ index .RepoDigests 0 }}' | tee -a "$GITHUB_STEP_SUMMARY"
+
+  manifest:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    env:
+      RELEASE_IMAGE: ghcr.io/${{ github.repository }}:${{ inputs.release_tag }}
+      SOURCE_REVISION: ${{ inputs.source_revision }}
+    steps:
+      - name: Create the multi-platform tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker buildx imagetools create \
+            --tag "$RELEASE_IMAGE" \
+            "$RELEASE_IMAGE-amd64" \
+            "$RELEASE_IMAGE-arm64"
+
+      - name: Verify the published tag
+        run: |
+          docker buildx imagetools inspect "$RELEASE_IMAGE" | tee /tmp/manifest.txt
+          grep -q 'linux/amd64' /tmp/manifest.txt
+          grep -q 'linux/arm64' /tmp/manifest.txt
+          for platform in linux/amd64 linux/arm64; do
+            docker pull --platform "$platform" "$RELEASE_IMAGE"
+            test "$(docker image inspect "$RELEASE_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')" = "$SOURCE_REVISION"
+          done
+          {
+            echo "Published \`$RELEASE_IMAGE\` for linux/amd64 and linux/arm64 from \`$SOURCE_REVISION\`."
+          } >> "$GITHUB_STEP_SUMMARY"
