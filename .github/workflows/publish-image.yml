@@ -4,8 +4,9 @@
 #
 # It publishes only an existing annotated release tag, and only when the tag
 # resolves to the full commit given as input. Each platform image must carry
-# that commit in its revision label and pass the Quick Start before it is
-# pushed. Nothing is tagged `latest`.
+# that commit in its revision label, pass the Quick Start, and pass the same
+# Trivy HIGH/CRITICAL gate the Release Gate uses before it is pushed. Nothing
+# is tagged `latest`.
 #
 # Run the Release Gate for the same tag and commit first. This workflow does
 # not repeat its gates.
@@ -112,6 +113,35 @@ jobs:
             http://127.0.0.1:8420/api/v1/query > /tmp/query.json
           python3 -c 'import json; body = json.load(open("/tmp/query.json")); assert body["meta"]["coverage_ratio"] == 1 and body["results"], body["meta"]'
           docker compose -f deploy/docker-compose.yml down --volumes
+
+      # Same scanner, version and severity gate as the Release Gate. It runs here
+      # because this job rebuilds the image, and for both platforms.
+      - name: Scan the image (hard gate)
+        run: |
+          mkdir -p artifacts
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/artifacts:/artifacts" \
+            aquasec/trivy:0.72.0 image \
+            --severity HIGH,CRITICAL \
+            --exit-code 0 \
+            --format json \
+            --output /artifacts/trivy-${{ matrix.arch }}.json \
+            "$PLATFORM_IMAGE"
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.72.0 image \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            "$PLATFORM_IMAGE"
+
+      - name: Keep the scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-${{ matrix.arch }}
+          path: artifacts/trivy-${{ matrix.arch }}.json
+          if-no-files-found: ignore
 
       - name: Push the platform image
         env:
