@@ -126,6 +126,22 @@ async def test_async_upload_and_wait(api_base: str, aclient: AsyncCortrix) -> No
 
 
 @respx.mock
+async def test_async_upload_and_wait_stops_on_completed(api_base: str, aclient: AsyncCortrix) -> None:
+    respx.post(api_base + "/documents").mock(
+        return_value=httpx.Response(202, json={"task_id": "t1", "status": "queued"})
+    )
+    prog = respx.get(api_base + "/documents/tasks/t1/progress")
+    prog.side_effect = [
+        httpx.Response(200, json={"task_id": "t1", "status": "processing"}),
+        httpx.Response(200, json={"task_id": "t1", "status": "completed"}),
+    ]
+    task = await aclient.documents.upload_and_wait(
+        "ns", io.BytesIO(b"hi"), filename="f.txt", poll_interval=0.0
+    )
+    assert task.status == "completed" and prog.call_count == 2
+
+
+@respx.mock
 async def test_async_memory_log_and_extract(api_base: str, aclient: AsyncCortrix) -> None:
     lg = respx.post(api_base + "/memory/sessions/s1/interactions").mock(
         return_value=httpx.Response(200, json={"interaction_id": "i"})
