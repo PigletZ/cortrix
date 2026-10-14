@@ -19,7 +19,7 @@
 
 优先打开 [Archify 交互图集](diagrams/archify/index.html)：12 张重绘的 HTML 图，覆盖总体架构、启动、入库、检索、查询时序、落盘、恢复、异步、Agent、接入、观测和 GC。各图旁保留 `candidate.json` 与校验收据，详见 [重绘说明](diagrams/archify/README.md)。
 
-[Mermaid 原版](diagrams/README.md) 和 `.mmd` 继续保留供源码文本对照。Archify 版进一步明确普通上传 blob、SPC PWL 与两层 GC 的边界；新增修改优先维护 Archify JSON。
+图表统一使用 Archify；修改各图的 `candidate.json` 后运行重绘脚本，生成 HTML 并更新校验收据。
 
 ## 归档原则
 

@@ -2,7 +2,7 @@
 
 Archify 重绘：[09-agent](../diagrams/archify/09-agent/09-agent.html) · [10-mcp-sdk](../diagrams/archify/10-mcp-sdk/10-mcp-sdk.html) · [11-observability](../diagrams/archify/11-observability/11-observability.html)
 
-[Agent 时序](../diagrams/09-agent.mmd) · [接入图](../diagrams/10-mcp-sdk.mmd) · [观测图](../diagrams/11-observability.mmd)
+[Agent 时序](../diagrams/archify/09-agent/09-agent.html) · [接入图](../diagrams/archify/10-mcp-sdk/10-mcp-sdk.html) · [观测图](../diagrams/archify/11-observability/11-observability.html)
 
 ## Web UI
 

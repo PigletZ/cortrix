@@ -35,7 +35,7 @@ python mydocs/tools/render_archify.py 03-ingest
 
 系统和存储图按子系统聚合模块，细节由流程/时序图和配套模块文档展开。序列位置表达顺序，不是实测耗时；查询时序展开单 NS，其他 NS 并发执行。可选 LLM、sparse、rerank 与开发中能力的限制保留在节点、边标签或说明卡中。
 
-本次重绘修正了旧图对普通上传 blob 与 SPC PWL 的合并表达，并将全局内容引用 GC 与 Unit 文档清理分开。Mermaid 原版继续保留供比较；新增和修改图优先维护本目录 JSON。
+图中分别说明普通上传 blob、SPC PWL 与两层 GC 的职责边界。新增和修改图统一维护本目录 JSON。
 
 工作区新增或变更集中在 `mydocs/` 与 `.tools/`，项目业务源码未改动。源码证据绑定 Cortrix 当前 commit，而非未提交的分析文档。
 

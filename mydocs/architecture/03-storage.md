@@ -2,7 +2,7 @@
 
 Archify 重绘：[06-storage](../diagrams/archify/06-storage/06-storage.html) · [07-write-recovery](../diagrams/archify/07-write-recovery/07-write-recovery.html) · [12-delete-gc](../diagrams/archify/12-delete-gc/12-delete-gc.html)
 
-[存储图](../diagrams/06-storage.mmd) · [写入恢复时序](../diagrams/07-write-recovery.mmd)
+[存储图](../diagrams/archify/06-storage/06-storage.html) · [写入恢复时序](../diagrams/archify/07-write-recovery/07-write-recovery.html)
 
 ## 逻辑实体
 
@@ -60,4 +60,4 @@ Commit 终态日志失败会重试；若主存储已经完成但重试耗尽，�
 
 Pool 持有 UnitBundle，facade 借用资源。加载顺序确保 store 与 recovery adapter 先于 coordinator Recover 可用；释放顺序必须避免 rollback callback 指向已释放连接。memory.db 在 Unit load 中预热 schema/WAL，不能假定首次 memory 请求才建库。
 
-删除涉及逻辑状态、引用计数、向量/块清理和 blob 延迟回收。[GC 图](../diagrams/12-delete-gc.mmd) 是模块级概括，各删除 API 是否同步清理以及 GC sink 是否覆盖其物理目录仍需按对应实现和集成测试确认。
+删除涉及逻辑状态、引用计数、向量/块清理和 blob 延迟回收。[GC 图](../diagrams/archify/12-delete-gc/12-delete-gc.html) 是模块级概括，各删除 API 是否同步清理以及 GC sink 是否覆盖其物理目录仍需按对应实现和集成测试确认。

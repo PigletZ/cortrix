@@ -8,7 +8,7 @@ Cortrix 是本地优先的语义存储系统。Namespace 是逻辑集合边界�
 
 项目并非一个 Python RAG 包：主服务由 C++17 编译为 `cortrix-server`，Python 和 React 工程围绕 HTTP API 集成。核心实现聚合在 CMake 静态库 `cortrix_core` 中；源码头文件主要位于 `include/cortrix/`，实现位于 `src/`。
 
-[系统图](../diagrams/README.md#01-系统与进程边界) · [启动图](../diagrams/02-bootstrap.mmd)
+[系统图](../diagrams/archify/01-system/01-system.html) · [启动图](../diagrams/archify/02-bootstrap/02-bootstrap.html)
 
 ## 进程与网络边界
 

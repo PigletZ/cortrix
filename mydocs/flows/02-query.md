@@ -2,7 +2,7 @@
 
 Archify 重绘：[04-query](../diagrams/archify/04-query/04-query.html) · [05-query-sequence](../diagrams/archify/05-query-sequence/05-query-sequence.html)
 
-[查询流程](../diagrams/04-query.mmd) · [跨 NS 时序](../diagrams/05-query-sequence.mmd)
+[查询流程](../diagrams/archify/04-query/04-query.html) · [跨 NS 时序](../diagrams/archify/05-query-sequence/05-query-sequence.html)
 
 ## 当前主入口
 

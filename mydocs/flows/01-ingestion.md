@@ -2,7 +2,7 @@
 
 Archify 重绘：[03-ingest](../diagrams/archify/03-ingest/03-ingest.html) · [08-async](../diagrams/archify/08-async/08-async.html)
 
-[入库图](../diagrams/03-ingest.mmd) · [异步图](../diagrams/08-async.mmd)
+[入库图](../diagrams/archify/03-ingest/03-ingest.html) · [异步图](../diagrams/archify/08-async/08-async.html)
 
 ## 入口不是单一路径
 

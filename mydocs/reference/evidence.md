@@ -34,7 +34,7 @@
 
 `tests/unit` 覆盖局部算法和协议，`tests/integration` 关注串联行为，`tests/scatter` 针对跨 NS，`tests/fault_inject`/`stability`/`fuzz`/`security` 提供故障和健壮性路径，`tests/benchmark`/`load`/`ragas` 分别对应性能/负载/评估。SDK、MCP、Agent、Skills 和 Web 各有独立测试。文件存在不代表测试已通过或达到生产保证。
 
-本次交付检查由 [check_docs.py](../tools/check_docs.py) 离线验证本地链接、图源与图集同步、Mermaid fenced blocks、必需文件和 API 索引非空；该检查不代替 Mermaid parser/render 或运行时功能测试。
+[check_docs.py](../tools/check_docs.py) 离线验证本地链接、代码围栏、Archify 图源与 HTML 文件配对、必需文件和 API 索引非空；[check_archify.py](../tools/check_archify.py) 验证图源和产物与通过收据的哈希绑定。这些检查不代替 Cortrix 运行时功能测试。
 
 
 ## Archify 重绘验证
