@@ -1,0 +1,351 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "F42 · 持久任务与解析进度",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/08-async/08-async.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "lanes": [
+    {
+      "id": "submit",
+      "label": "持久受理与调度"
+    },
+    {
+      "id": "execute",
+      "label": "执行与复用 SPC"
+    },
+    {
+      "id": "control",
+      "label": "控制与终态"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "input",
+      "label": "受理输入",
+      "sublabel": "batch / managed files",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/batch_submit_service.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "submit",
+      "col": 0
+    },
+    {
+      "id": "task",
+      "label": "持久任务",
+      "sublabel": "TaskManager / tasks.db",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/async/task_manager.cpp",
+          "line": 169,
+          "end_line": 239
+        }
+      ],
+      "lane": "submit",
+      "col": 1
+    },
+    {
+      "id": "sched",
+      "label": "调度",
+      "sublabel": "TaskScheduler",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/task_scheduler.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "submit",
+      "col": 2
+    },
+    {
+      "id": "pool",
+      "label": "worker pool",
+      "sublabel": "有界后台线程",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/worker_pool.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "submit",
+      "col": 3
+    },
+    {
+      "id": "handler",
+      "label": "文档 handler",
+      "sublabel": "DocumentProcessor",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/document_processor.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "execute",
+      "col": 3
+    },
+    {
+      "id": "parse",
+      "label": "结构解析",
+      "sublabel": "ParserFactory / pages",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/document_processor.cpp",
+          "line": 94,
+          "end_line": 159
+        }
+      ],
+      "lane": "execute",
+      "col": 2
+    },
+    {
+      "id": "spc",
+      "label": "Post-parse SPC",
+      "sublabel": "ProcessParsedDoc",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/document_processor.cpp",
+          "line": 144,
+          "end_line": 159
+        }
+      ],
+      "lane": "execute",
+      "col": 1
+    },
+    {
+      "id": "persist",
+      "label": "索引持久化",
+      "sublabel": "L3 / PWL / stores",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 184,
+          "end_line": 254
+        }
+      ],
+      "lane": "execute",
+      "col": 0
+    },
+    {
+      "id": "final",
+      "label": "任务终态",
+      "sublabel": "complete/fail/cancel",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/task_finalizer.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "control",
+      "col": 0
+    },
+    {
+      "id": "progress",
+      "label": "进度持久化",
+      "sublabel": "page counts / pct",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/document_processor.cpp",
+          "line": 85,
+          "end_line": 155
+        }
+      ],
+      "lane": "control",
+      "col": 1
+    },
+    {
+      "id": "cancel",
+      "label": "查询与取消",
+      "sublabel": "client / checkpoints",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/document_processor.cpp",
+          "line": 36,
+          "end_line": 106
+        }
+      ],
+      "lane": "control",
+      "col": 2
+    },
+    {
+      "id": "cleanup",
+      "label": "历史清理",
+      "sublabel": "TaskCleanupCron",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/async/task_cleanup_cron.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "control",
+      "col": 5
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "from": "input",
+      "to": "task"
+    },
+    {
+      "id": "e1",
+      "from": "task",
+      "to": "sched",
+      "label": "queued"
+    },
+    {
+      "id": "e2",
+      "from": "sched",
+      "to": "pool"
+    },
+    {
+      "id": "e3",
+      "from": "pool",
+      "to": "handler"
+    },
+    {
+      "id": "e4",
+      "from": "handler",
+      "to": "parse"
+    },
+    {
+      "id": "e5",
+      "from": "parse",
+      "to": "spc",
+      "label": "ParsedDoc"
+    },
+    {
+      "id": "e6",
+      "from": "spc",
+      "to": "persist"
+    },
+    {
+      "id": "e7",
+      "from": "persist",
+      "to": "final"
+    },
+    {
+      "id": "e8",
+      "from": "parse",
+      "to": "progress",
+      "label": "每页"
+    },
+    {
+      "id": "e9",
+      "from": "progress",
+      "to": "task",
+      "label": "UpdateProgress",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          214,
+          409
+        ],
+        [
+          806,
+          409
+        ],
+        [
+          806,
+          55
+        ],
+        [
+          214,
+          55
+        ]
+      ]
+    },
+    {
+      "id": "e10",
+      "from": "cancel",
+      "to": "parse",
+      "label": "检查点"
+    },
+    {
+      "id": "e11",
+      "from": "final",
+      "to": "task",
+      "label": "终态"
+    },
+    {
+      "id": "e12",
+      "from": "cleanup",
+      "to": "task",
+      "label": "清理",
+      "fromSide": "top",
+      "toSide": "right",
+      "via": [
+        [
+          727.2,
+          325
+        ],
+        [
+          774,
+          325
+        ],
+        [
+          774,
+          77
+        ],
+        [
+          280,
+          77
+        ],
+        [
+          280,
+          119
+        ]
+      ],
+      "labelAt": [
+        774,
+        200
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "取消边界",
+      "items": [
+        "取消主要在解析页检查点与解析后检查；不是立即强杀 parser。",
+        "当前 post-parse SPC 没有完整细粒度取消传播。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "独立执行域",
+      "items": [
+        "tasks.db 持久任务不同于普通 SPC 内存队列。",
+        "有 SPCManager 的实际装配复用完整入库；standalone 分支可 parse-only。"
+      ]
+    }
+  ]
+}

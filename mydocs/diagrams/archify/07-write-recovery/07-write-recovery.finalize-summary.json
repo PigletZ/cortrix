@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "sequence",
+  "quality": "showcase",
+  "specification": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/candidate.json",
+    "sha256": "b8ec6a7b378ef3f1d681d67b3d0b4e611877c2e97ef458044434442703756478",
+    "bytes": 3929
+  },
+  "artifact": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/07-write-recovery.html",
+    "sha256": "54ce34c02607954a17b036405b6d45f957486752f2f284d1c376b6ef6b207ed1",
+    "bytes": 811599
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "fail"
+  },
+  "failedStage": "browser-check",
+  "diagnostics": [
+    {
+      "code": "viewer/browser-check-runtime",
+      "severity": "error",
+      "message": "browser-check could not complete its Chrome inspection.",
+      "subject": {
+        "artifact": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/07-write-recovery.html"
+      },
+      "evidence": {
+        "reason": "Chrome DevTools write pipe failed: write EPIPE [EPIPE]\nChrome process: still running.\nChrome transport: Node v22.16.0, libuv 1.49.2, linux; pid=18517, exitCode=null, signalCode=null.\nChrome read pipe: readable=true, ended=false, destroyed=false, receivedBytes=0, messages=0, bufferedBytes=0.\nChrome write pipe: writable=false, ended=false, destroyed=false, completedWrites=0, writtenBytes=0, bufferedBytes=0."
+      },
+      "supportedFixes": [
+        "resolve the reported Chrome inspection error, then rerun browser-check"
+      ]
+    }
+  ],
+  "diagnosticSummary": {
+    "total": 1,
+    "shown": 1,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/07-write-recovery.finalize.json",
+    "summaryReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/07-write-recovery.finalize-summary.json",
+    "browserCheckReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/07-write-recovery.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-14T03:40:26.031Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 1090
+}

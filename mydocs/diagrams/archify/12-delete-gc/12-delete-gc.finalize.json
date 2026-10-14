@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "workflow",
+  "quality": "showcase",
+  "startedAt": "2026-10-14T03:43:40.336Z",
+  "specification": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/candidate.json",
+    "sha256": "f93d08c04b5dcea5db2b38a008a55dc384348e2487d4828ae25d516390b89598",
+    "bytes": 5752
+  },
+  "artifact": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+    "sha256": "9e4254bfb922997bf1a6ec374e456a94995e281385e416d9eb9115dc6e333baa",
+    "bytes": 821206
+  },
+  "stages": {
+    "validate": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": null,
+      "execution": "embedded-in-deliver",
+      "command": [
+        "/data/zjh/cortrix/main/cortrix/.tools/node-v22.16.0-linux-x64/bin/node",
+        "/data/zjh/cortrix/main/cortrix/.tools/archify/bin/archify.mjs",
+        "deliver",
+        "workflow",
+        "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/candidate.json",
+        "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "/data/zjh/cortrix/main/cortrix",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": true,
+        "command": "validate",
+        "specification": {
+          "sha256": "f93d08c04b5dcea5db2b38a008a55dc384348e2487d4828ae25d516390b89598",
+          "bytes": 5752
+        },
+        "validation": {
+          "checksPassed": 9,
+          "checkCount": 9,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "deliver": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 806,
+      "command": [
+        "/data/zjh/cortrix/main/cortrix/.tools/node-v22.16.0-linux-x64/bin/node",
+        "/data/zjh/cortrix/main/cortrix/.tools/archify/bin/archify.mjs",
+        "deliver",
+        "workflow",
+        "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/candidate.json",
+        "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "/data/zjh/cortrix/main/cortrix",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "receiptId": "d4837dd7-8a22-4134-9834-4dd709abe33d",
+        "ok": true,
+        "command": "deliver",
+        "type": "workflow",
+        "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/candidate.json",
+        "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+        "specification": {
+          "sha256": "f93d08c04b5dcea5db2b38a008a55dc384348e2487d4828ae25d516390b89598",
+          "bytes": 5752
+        },
+        "artifact": {
+          "sha256": "9e4254bfb922997bf1a6ec374e456a94995e281385e416d9eb9115dc6e333baa",
+          "bytes": 821206
+        },
+        "validation": {
+          "checksPassed": 9,
+          "checkCount": 9,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        },
+        "evidence": {
+          "verified": true,
+          "repository": "https://github.com/PigletZ/cortrix",
+          "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+          "references": 11,
+          "linkMode": "local-only"
+        },
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      }
+    },
+    "check": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 227,
+      "command": [
+        "/data/zjh/cortrix/main/cortrix/.tools/node-v22.16.0-linux-x64/bin/node",
+        "/data/zjh/cortrix/main/cortrix/.tools/archify/bin/archify.mjs",
+        "check",
+        "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+        "--require-provenance"
+      ],
+      "receipt": {
+        "ok": true,
+        "file": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+        "artifact": {
+          "sha256": "9e4254bfb922997bf1a6ec374e456a94995e281385e416d9eb9115dc6e333baa",
+          "bytes": 821206
+        },
+        "checks": [
+          {
+            "name": "single_svg",
+            "ok": true,
+            "details": [
+              "found 1 <svg> block(s)"
+            ]
+          },
+          {
+            "name": "finite_svg",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "orthogonal_arrows",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "label_route_clearance",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "relationship_crossings",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "relationship_corridors",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "container_border_runs",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "route_rhythm",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "legend_clearance",
+            "ok": true,
+            "details": []
+          }
+        ],
+        "composition": {
+          "schemaVersion": 1,
+          "profile": "showcase",
+          "status": "pass",
+          "summary": {
+            "errors": 0,
+            "warnings": 0
+          },
+          "metrics": {
+            "properCrossings": 0,
+            "resolvedCrossovers": 0,
+            "ambiguousCorridors": 0,
+            "arrowheadCollisions": 0,
+            "containerBorderRuns": 0,
+            "labelRouteClearanceIssues": 0,
+            "labelCanvasOverflowIssues": 0,
+            "minLabelRouteClearance": 15,
+            "desktopReadabilityIssues": 0,
+            "viewportHeightIssues": 0,
+            "minProjectedNodeTextPx": 6.3,
+            "maxBends": 0,
+            "routesOverSuggestedBends": 0,
+            "maxStretch": 1,
+            "routesOverSuggestedStretch": 0,
+            "minSegmentPx": 8,
+            "minInteriorSegmentPx": null,
+            "shortSegmentCount": 4,
+            "shortEndpointSegmentCount": 4,
+            "shortInteriorSegmentCount": 0,
+            "microSegmentCount": 0
+          },
+          "suggestedLimits": {
+            "bendsPerRelationship": 2,
+            "stretch": 1.35,
+            "segmentPx": 16,
+            "microSegmentPx": 8
+          },
+          "routeReview": {
+            "crossings": [],
+            "detours": []
+          },
+          "leadingSpace": {
+            "measured": false,
+            "reviewSuggested": false
+          },
+          "desktopReadability": {
+            "budgetBasis": "legacy-930",
+            "readerContract": "declared-wide-v1",
+            "availableDiagramWidth": 930,
+            "actualBudgetPx": 930,
+            "limit": "legacy",
+            "requestedTargetPx": null,
+            "requestedTargetMet": null,
+            "hardFloorPx": 6,
+            "hardFloorMet": true,
+            "minimumOwner": {
+              "kind": "node",
+              "id": "candidates"
+            },
+            "minimumSourceTextPx": 6.3,
+            "minimumProjectedTextPx": 6.3,
+            "semanticTextCount": 28
+          },
+          "issues": []
+        },
+        "provenance": "current",
+        "deliveryReceiptId": "d4837dd7-8a22-4134-9834-4dd709abe33d"
+      }
+    },
+    "browser-check": {
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": 70,
+      "command": [
+        "/data/zjh/cortrix/main/cortrix/.tools/node-v22.16.0-linux-x64/bin/node",
+        "/data/zjh/cortrix/main/cortrix/.tools/archify/bin/archify.mjs",
+        "browser-check",
+        "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+        "--json",
+        "--require-provenance"
+      ],
+      "execution": "in-process",
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": false,
+        "command": "browser-check",
+        "evidenceKind": "automated-browser",
+        "status": "fail",
+        "visualReview": "not-requested",
+        "provenance": "current",
+        "deliveryReceiptId": "d4837dd7-8a22-4134-9834-4dd709abe33d",
+        "artifact": {
+          "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+          "sha256": "9e4254bfb922997bf1a6ec374e456a94995e281385e416d9eb9115dc6e333baa",
+          "bytes": 821206
+        },
+        "state": {
+          "detail": "read",
+          "motion": "still"
+        },
+        "chrome": {
+          "status": "available",
+          "executable": "/data/zjh/cortrix/main/cortrix/.tools/chrome/chrome-headless-shell-linux64/chrome-headless-shell"
+        },
+        "diagnostics": [
+          {
+            "code": "viewer/browser-check-runtime",
+            "severity": "error",
+            "message": "browser-check could not complete its Chrome inspection.",
+            "subject": {
+              "artifact": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html"
+            },
+            "evidence": {
+              "reason": "Chrome DevTools write pipe failed: write EPIPE [EPIPE]\nChrome process: still running.\nChrome transport: Node v22.16.0, libuv 1.49.2, linux; pid=18951, exitCode=null, signalCode=null.\nChrome read pipe: readable=true, ended=false, destroyed=false, receivedBytes=0, messages=0, bufferedBytes=0.\nChrome write pipe: writable=false, ended=false, destroyed=false, completedWrites=0, writtenBytes=0, bufferedBytes=0."
+            },
+            "supportedFixes": [
+              "resolve the reported Chrome inspection error, then rerun browser-check"
+            ]
+          }
+        ],
+        "containment": {
+          "status": "fail",
+          "policy": "fit-or-reader-declared-readable-vertical-scroll",
+          "viewports": []
+        },
+        "themeStates": {
+          "status": "fail",
+          "viewports": []
+        },
+        "readability": {
+          "status": "fail",
+          "minimumProjectedNodeTextPx": 6,
+          "viewports": []
+        },
+        "viewerChrome": {
+          "status": "fail",
+          "viewports": []
+        },
+        "captures": {
+          "status": "not-requested",
+          "screenshots": [],
+          "contactSheet": null
+        },
+        "sidecars": {
+          "receipt": "12-delete-gc.browser-check.json",
+          "files": []
+        },
+        "error": "Chrome DevTools write pipe failed: write EPIPE [EPIPE]\nChrome process: still running.\nChrome transport: Node v22.16.0, libuv 1.49.2, linux; pid=18951, exitCode=null, signalCode=null.\nChrome read pipe: readable=true, ended=false, destroyed=false, receivedBytes=0, messages=0, bufferedBytes=0.\nChrome write pipe: writable=false, ended=false, destroyed=false, completedWrites=0, writtenBytes=0, bufferedBytes=0."
+      }
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "viewer/browser-check-runtime",
+      "severity": "error",
+      "message": "browser-check could not complete its Chrome inspection.",
+      "subject": {
+        "artifact": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html"
+      },
+      "evidence": {
+        "reason": "Chrome DevTools write pipe failed: write EPIPE [EPIPE]\nChrome process: still running.\nChrome transport: Node v22.16.0, libuv 1.49.2, linux; pid=18951, exitCode=null, signalCode=null.\nChrome read pipe: readable=true, ended=false, destroyed=false, receivedBytes=0, messages=0, bufferedBytes=0.\nChrome write pipe: writable=false, ended=false, destroyed=false, completedWrites=0, writtenBytes=0, bufferedBytes=0."
+      },
+      "supportedFixes": [
+        "resolve the reported Chrome inspection error, then rerun browser-check"
+      ]
+    }
+  ],
+  "evidence": {
+    "receipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.finalize.json",
+    "summaryReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.finalize-summary.json",
+    "browserCheckReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "failedStage": "browser-check",
+  "finishedAt": "2026-10-14T03:43:41.753Z",
+  "durationMs": 1417,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-14T03:40:26.031Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}

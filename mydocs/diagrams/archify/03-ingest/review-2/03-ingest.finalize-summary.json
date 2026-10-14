@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "workflow",
+  "quality": "showcase",
+  "specification": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/03-ingest/candidate.json",
+    "sha256": "d1bc95f891412f8f0e861edec5c4c330040ed485dfda9a1ecf1c538e5448e0b7",
+    "bytes": 7678
+  },
+  "artifact": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/03-ingest/03-ingest.html",
+    "sha256": "ead798e3e1fcdab13c55e4850b9903043b3ca336a1b9ab0d55b9169517b231cd",
+    "bytes": 828134
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/03-ingest/review-2/03-ingest.finalize.json",
+    "summaryReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/03-ingest/review-2/03-ingest.finalize-summary.json",
+    "browserCheckReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/03-ingest/review-2/03-ingest.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-14T03:40:26.031Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3759
+}

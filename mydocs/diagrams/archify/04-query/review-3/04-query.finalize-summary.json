@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/candidate.json",
+    "sha256": "b841ee7066670e479d40b6dc93050b7bac1cbd5c719c0d5e1f645e858647c943",
+    "bytes": 8767
+  },
+  "artifact": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/04-query.html",
+    "sha256": "8bbc6e4745aaaf3e278dbc49e05ff2bf51c5f43dfbf82e0cc4c8350c0c3438e9",
+    "bytes": 835893
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/review-3/04-query.finalize.json",
+    "summaryReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/review-3/04-query.finalize-summary.json",
+    "browserCheckReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/review-3/04-query.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-14T03:40:26.031Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 4116,
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 3,
+      "routesOverSuggestedBends": 2
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "e0",
+            "from": "req",
+            "to": "auth",
+            "label": "",
+            "collectionIndex": 0,
+            "artifactIndex": 1
+          },
+          "right": {
+            "id": "e10",
+            "from": "scope",
+            "to": "doc",
+            "label": "doc/both",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "point": [
+            254,
+            78
+          ]
+        },
+        {
+          "left": {
+            "id": "e2",
+            "from": "auth",
+            "to": "facts",
+            "label": "chat",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "right": {
+            "id": "e12",
+            "from": "rrf",
+            "to": "rank",
+            "label": "rerank",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "point": [
+            306,
+            408
+          ]
+        },
+        {
+          "left": {
+            "id": "e12",
+            "from": "rrf",
+            "to": "rank",
+            "label": "rerank",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "right": {
+            "id": "e14",
+            "from": "doc",
+            "to": "gather",
+            "label": "doc结果",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            254,
+            408
+          ]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "e2",
+            "from": "auth",
+            "to": "facts",
+            "label": "chat",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "bends": 3,
+          "stretch": 1.043
+        },
+        {
+          "relationship": {
+            "id": "e10",
+            "from": "scope",
+            "to": "doc",
+            "label": "doc/both",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "bends": 3,
+          "stretch": 1.05
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "req → auth crosses scope → doc: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "auth → facts crosses rrf → rank: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "rrf → rank crosses doc → gather: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "auth → facts needs 3 bends: move node auth or facts so they share a row or column with matching centers, or sit diagonally with a clear corner.",
+      "scope → doc needs 3 bends: move node scope or doc so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "查询 · 路由与混合召回",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/04-query/04-query.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "lanes": [
+    {
+      "id": "route",
+      "label": "请求与执行路由"
+    },
+    {
+      "id": "dispatch",
+      "label": "粒度与召回配置"
+    },
+    {
+      "id": "recall",
+      "label": "候选召回"
+    },
+    {
+      "id": "rank",
+      "label": "融合与排序"
+    },
+    {
+      "id": "output",
+      "label": "汇总与完整性"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "label": "请求校验",
+      "sublabel": "query / NS / top_k",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/query_wiring.cpp",
+          "line": 320,
+          "end_line": 390
+        }
+      ],
+      "lane": "route",
+      "col": 0
+    },
+    {
+      "id": "auth",
+      "label": "授权与分类",
+      "sublabel": "ONNX / heuristic",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/query_wiring.cpp",
+          "line": 190,
+          "end_line": 260
+        }
+      ],
+      "lane": "route",
+      "col": 1
+    },
+    {
+      "id": "scatter",
+      "label": "跨 NS 分发",
+      "sublabel": "ExecutorEngine",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/query_wiring.cpp",
+          "line": 181,
+          "end_line": 251
+        }
+      ],
+      "lane": "route",
+      "col": 2
+    },
+    {
+      "id": "scope",
+      "label": "选择粒度",
+      "sublabel": "chunk / doc / both",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 379,
+          "end_line": 449
+        }
+      ],
+      "lane": "dispatch",
+      "col": 2
+    },
+    {
+      "id": "facts",
+      "label": "chat 路由",
+      "sublabel": "user_facts / 不召回",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/query_wiring.cpp",
+          "line": 370,
+          "end_line": 440
+        }
+      ],
+      "lane": "route",
+      "col": 4
+    },
+    {
+      "id": "dense",
+      "label": "Dense ANN",
+      "sublabel": "query → embedding",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 454,
+          "end_line": 524
+        }
+      ],
+      "lane": "recall",
+      "col": 1
+    },
+    {
+      "id": "bm25",
+      "label": "BM25",
+      "sublabel": "SQLite FTS5",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 467,
+          "end_line": 537
+        }
+      ],
+      "lane": "recall",
+      "col": 2
+    },
+    {
+      "id": "sparse",
+      "label": "可选 Sparse",
+      "sublabel": "registry / sparse vec",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 601,
+          "end_line": 671
+        }
+      ],
+      "lane": "recall",
+      "col": 3
+    },
+    {
+      "id": "doc",
+      "label": "文档级发现",
+      "sublabel": "summary ANN / FTS5",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 8,
+          "end_line": 78
+        }
+      ],
+      "lane": "recall",
+      "col": 0
+    },
+    {
+      "id": "resolve",
+      "label": "还原来源",
+      "sublabel": "child / HyPE / context",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 32,
+          "end_line": 102
+        }
+      ],
+      "lane": "rank",
+      "col": 2
+    },
+    {
+      "id": "rrf",
+      "label": "多路 RRF",
+      "sublabel": "过滤 / 候选过采样",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 621,
+          "end_line": 691
+        }
+      ],
+      "lane": "rank",
+      "col": 1
+    },
+    {
+      "id": "rank",
+      "label": "可选重排",
+      "sublabel": "ScoreBatch / fusion",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 677,
+          "end_line": 747
+        }
+      ],
+      "lane": "rank",
+      "col": 0
+    },
+    {
+      "id": "gather",
+      "label": "跨 NS 汇总",
+      "sublabel": "排序 / hash 去重",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/scatter_gather.cpp",
+          "line": 207,
+          "end_line": 263
+        }
+      ],
+      "lane": "output",
+      "col": 0
+    },
+    {
+      "id": "optional",
+      "label": "可选查询增强",
+      "sublabel": "RAG-Fusion / CRAG / LLM",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/query_wiring.cpp",
+          "line": 22,
+          "end_line": 92
+        }
+      ],
+      "lane": "output",
+      "col": 1
+    },
+    {
+      "id": "response",
+      "label": "JSON 返回",
+      "sublabel": "results / meta",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/scatter_gather.cpp",
+          "line": 231,
+          "end_line": 263
+        }
+      ],
+      "lane": "output",
+      "col": 5
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "from": "req",
+      "to": "auth"
+    },
+    {
+      "id": "e1",
+      "from": "auth",
+      "to": "scatter",
+      "label": "检索"
+    },
+    {
+      "id": "e2",
+      "from": "auth",
+      "to": "facts",
+      "label": "chat",
+      "role": "branch"
+    },
+    {
+      "id": "e3",
+      "from": "scatter",
+      "to": "scope"
+    },
+    {
+      "id": "e4",
+      "from": "scope",
+      "to": "dense",
+      "label": "chunk",
+      "fromSide": "left",
+      "toSide": "top"
+    },
+    {
+      "id": "e5",
+      "from": "scope",
+      "to": "bm25",
+      "label": "词项",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          362.8,
+          305
+        ]
+      ]
+    },
+    {
+      "id": "e6",
+      "from": "scope",
+      "to": "sparse",
+      "label": "启用时",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "e7",
+      "from": "dense",
+      "to": "resolve",
+      "label": "候选"
+    },
+    {
+      "id": "e8",
+      "from": "bm25",
+      "to": "resolve",
+      "label": "候选"
+    },
+    {
+      "id": "e9",
+      "from": "sparse",
+      "to": "resolve",
+      "label": "候选"
+    },
+    {
+      "id": "e10",
+      "from": "scope",
+      "to": "doc",
+      "label": "doc/both",
+      "role": "branch",
+      "fromSide": "top",
+      "toSide": "left",
+      "via": [
+        [
+          362.8,
+          181
+        ],
+        [
+          16,
+          181
+        ],
+        [
+          16,
+          391
+        ]
+      ]
+    },
+    {
+      "id": "e11",
+      "from": "resolve",
+      "to": "rrf"
+    },
+    {
+      "id": "e12",
+      "from": "rrf",
+      "to": "rank",
+      "label": "rerank"
+    },
+    {
+      "id": "e13",
+      "from": "rank",
+      "to": "gather"
+    },
+    {
+      "id": "e14",
+      "from": "doc",
+      "to": "gather",
+      "label": "doc结果",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "via": [
+        [
+          94,
+          433
+        ],
+        [
+          16,
+          433
+        ],
+        [
+          16,
+          705
+        ],
+        [
+          94,
+          705
+        ]
+      ],
+      "labelAt": [
+        55,
+        431
+      ]
+    },
+    {
+      "id": "e15",
+      "from": "gather",
+      "to": "optional",
+      "label": "依配置"
+    },
+    {
+      "id": "e16",
+      "from": "optional",
+      "to": "response"
+    },
+    {
+      "id": "e17",
+      "from": "facts",
+      "to": "response",
+      "label": "facts",
+      "fromSide": "right",
+      "toSide": "right",
+      "route": "outside-right",
+      "channelX": 845
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "召回关系",
+      "items": [
+        "dense、BM25 和 sparse 是独立可选召回源；候选汇入来源解析与 RRF。",
+        "simple/chat 不消费 HyPE/contextual votes；complex 可用混合 ANN。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "排序层次",
+      "items": [
+        "单 NS ScoreBatch 可执行神经重排；GatherAndRerank 当前主要排序、去重、截断。",
+        "RAG-Fusion/CRAG/listwise 有各自 gate，框图不声明其全部默认启用。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "完整性",
+      "items": [
+        "coverage_ratio 是成功 NS / 查询 NS，不是答案质量。",
+        "部分失败保留 namespaces_failed；显式 memory 的语义检索当前不受支持。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "查询 · 跨 Namespace 调用时序",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/05-query-sequence/05-query-sequence.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "participants": [
+    {
+      "id": "client",
+      "label": "HTTP 客户端",
+      "sublabel": "POST /query",
+      "type": "external",
+      "sources": [
+        {
+          "path": "api/paths/query.yaml",
+          "line": 1,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "wire",
+      "label": "查询入口",
+      "sublabel": "CrossNsQueryWiring",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/query_wiring.cpp",
+          "line": 65,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "scatter",
+      "label": "并发分发",
+      "sublabel": "ScatterGather",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/scatter_gather.cpp",
+          "line": 18,
+          "end_line": 88
+        }
+      ]
+    },
+    {
+      "id": "exec",
+      "label": "单 NS 执行",
+      "sublabel": "LiveExecutor",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 377,
+          "end_line": 447
+        }
+      ]
+    },
+    {
+      "id": "models",
+      "label": "本地模型",
+      "sublabel": "embed / rerank",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 677,
+          "end_line": 747
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "label": "存储资源",
+      "sublabel": "SQLite / ANN",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/query/live_single_unit_executor.cpp",
+          "line": 454,
+          "end_line": 524
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": "m0",
+      "from": "client",
+      "to": "wire",
+      "label": "query / namespaces / filter",
+      "y": 180
+    },
+    {
+      "id": "m1",
+      "from": "wire",
+      "to": "scatter",
+      "label": "校验、授权、分类后 fan-out",
+      "y": 225
+    },
+    {
+      "id": "m2",
+      "from": "scatter",
+      "to": "exec",
+      "label": "namespace / QueryContext",
+      "y": 270,
+      "note": "每个 NS 独立 deadline；其余 NS 同时执行"
+    },
+    {
+      "id": "m3",
+      "from": "exec",
+      "to": "models",
+      "label": "query embedding",
+      "y": 350
+    },
+    {
+      "id": "m4",
+      "from": "models",
+      "to": "exec",
+      "label": "dense / 可选 sparse",
+      "y": 395,
+      "variant": "return"
+    },
+    {
+      "id": "m5",
+      "from": "exec",
+      "to": "data",
+      "label": "ANN / FTS5 / sparse lookup",
+      "y": 440
+    },
+    {
+      "id": "m6",
+      "from": "data",
+      "to": "exec",
+      "label": "候选与来源块",
+      "y": 485,
+      "variant": "return",
+      "note": "源块映射、过滤、RRF 在 executor 内执行"
+    },
+    {
+      "id": "m7",
+      "from": "exec",
+      "to": "models",
+      "label": "rerank=true 时 ScoreBatch",
+      "y": 565
+    },
+    {
+      "id": "m8",
+      "from": "models",
+      "to": "exec",
+      "label": "cross-encoder scores",
+      "y": 610,
+      "variant": "return"
+    },
+    {
+      "id": "m9",
+      "from": "exec",
+      "to": "scatter",
+      "label": "NamespaceQueryResult",
+      "y": 655,
+      "variant": "return",
+      "note": "按 final score 排序、content_hash 去重、global top_k"
+    },
+    {
+      "id": "m10",
+      "from": "scatter",
+      "to": "wire",
+      "label": "results / failures / coverage",
+      "y": 735,
+      "variant": "return"
+    },
+    {
+      "id": "m11",
+      "from": "wire",
+      "to": "client",
+      "label": "JSON / explain / warnings",
+      "y": 780,
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "并发与可选阶段",
+      "items": [
+        "图中只展开一个 NS；其他 NS 按相同执行器并发。",
+        "doc/both、chat facts 和 RAG-Fusion 等分支见查询流程图。"
+      ]
+    }
+  ]
+}

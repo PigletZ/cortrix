@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "接入 · MCP、SDK 与框架工具",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/10-mcp-sdk/10-mcp-sdk.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "ide",
+      "label": "IDE Agent",
+      "sublabel": "local stdio MCP",
+      "type": "external",
+      "sources": [
+        {
+          "path": "cortrix-mcp/README.md",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "mcp",
+      "label": "MCP tools",
+      "sublabel": "core / memory / admin",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "cortrix-mcp/src/cortrix_mcp/mcp_server.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        380,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "httpx",
+      "label": "独立 transport",
+      "sublabel": "httpx / identity headers",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "cortrix-mcp/src/cortrix_mcp/transport.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        720,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "framework",
+      "label": "框架调用",
+      "sublabel": "OpenAI / Claude / LC",
+      "type": "external",
+      "sources": [
+        {
+          "path": "cortrix-skills/src/cortrix_skills/toolkit.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        40,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "toolkit",
+      "label": "Skills toolkit",
+      "sublabel": "descriptor / adapters",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "cortrix-skills/src/cortrix_skills/toolkit.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        380,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "core",
+      "label": "C++ HTTP API",
+      "sublabel": "api/v1 JSON",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/http_server.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        720,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "app",
+      "label": "Python 应用",
+      "sublabel": "Agent / custom app",
+      "type": "external",
+      "sources": [
+        {
+          "path": "sdk/python/README.md",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        40,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "sdk",
+      "label": "Sync / Async SDK",
+      "sublabel": "resources / typed models",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "sdk/python/cortrix/_client.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        380,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "base",
+      "label": "SDK request loop",
+      "sublabel": "retry / error / timeout",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "sdk/python/cortrix/_base_client.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        720,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "e0",
+      "from": "ide",
+      "to": "mcp",
+      "label": "stdio"
+    },
+    {
+      "id": "e1",
+      "from": "mcp",
+      "to": "httpx",
+      "label": "tool call"
+    },
+    {
+      "id": "e2",
+      "from": "httpx",
+      "to": "core",
+      "label": "HTTP"
+    },
+    {
+      "id": "e3",
+      "from": "framework",
+      "to": "toolkit",
+      "label": "工具调用"
+    },
+    {
+      "id": "e4",
+      "from": "toolkit",
+      "to": "sdk",
+      "label": "资源方法"
+    },
+    {
+      "id": "e5",
+      "from": "app",
+      "to": "sdk",
+      "label": "调用"
+    },
+    {
+      "id": "e6",
+      "from": "sdk",
+      "to": "base",
+      "label": "request"
+    },
+    {
+      "id": "e7",
+      "from": "base",
+      "to": "core",
+      "label": "HTTP"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "MCP identity",
+      "items": [
+        "每进程 session correlation ID；每请求 trace_id。",
+        "注入 Bearer、X-Session-Id、X-Trace-Id、X-Agent-Id。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "错误与完整性",
+      "items": [
+        "SDK/MCP 尽量透传业务错误、retryable/category/structured_data。",
+        "MCP envelope 保留 coverage_ratio 与 namespaces_failed。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "接入边界",
+      "items": [
+        "MCP 直接 HTTP，不经过 Python SDK。",
+        "Skills 缺少 matching resource 时通过 SDK request loop HTTP fallback。"
+      ]
+    }
+  ]
+}

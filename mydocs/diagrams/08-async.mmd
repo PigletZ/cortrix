@@ -1,0 +1,15 @@
+flowchart LR
+  Input[batch / document submission] --> Managed[managed input files / task metadata]
+  Managed --> TM[TaskManager / tasks.db]
+  TM --> Scheduler[TaskScheduler priority queue]
+  Scheduler --> Pool[WorkerPool bounded workers]
+  Pool --> Handler[DocumentTaskHandler]
+  Handler --> Processor[DocumentProcessor]
+  Processor --> Parse[ParserFactory / subprocess]
+  Parse -->|page progress| TM
+  Parse -->|ParsedDoc| SPC[SPCManager.ProcessParsedDoc]
+  SPC --> Persist[shared post-parse SPC / durable writes]
+  Persist --> Final[TaskFinalizer complete / fail / cancel]
+  Final --> TM
+  Client[client poll / cancel] --> TM
+  Cron[TaskCleanupCron / cleanup registrar] --> TM

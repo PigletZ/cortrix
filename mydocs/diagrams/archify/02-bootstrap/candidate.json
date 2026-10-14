@@ -1,0 +1,286 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Core · 启动装配与关闭",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/02-bootstrap/02-bootstrap.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "lanes": [
+    {
+      "id": "init",
+      "label": "配置与全局状态"
+    },
+    {
+      "id": "assembly",
+      "label": "业务装配"
+    },
+    {
+      "id": "runtime",
+      "label": "运行与关闭"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "main",
+      "label": "main",
+      "sublabel": "RunServer",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/main.cpp",
+          "line": 1,
+          "end_line": 5
+        }
+      ],
+      "lane": "init",
+      "col": 0
+    },
+    {
+      "id": "cfg",
+      "label": "配置与日志",
+      "sublabel": "CLI / YAML / env",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 180,
+          "end_line": 250
+        }
+      ],
+      "lane": "init",
+      "col": 1
+    },
+    {
+      "id": "auth",
+      "label": "认证库",
+      "sublabel": "platform.db",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 270,
+          "end_line": 340
+        }
+      ],
+      "lane": "init",
+      "col": 2
+    },
+    {
+      "id": "cat",
+      "label": "全局目录",
+      "sublabel": "catalog.db",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 324,
+          "end_line": 394
+        }
+      ],
+      "lane": "init",
+      "col": 3
+    },
+    {
+      "id": "pool",
+      "label": "资源池",
+      "sublabel": "router / Unit handles",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 367,
+          "end_line": 437
+        }
+      ],
+      "lane": "assembly",
+      "col": 3
+    },
+    {
+      "id": "model",
+      "label": "模型与解析",
+      "sublabel": "ONNX / ParserFactory",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 212,
+          "end_line": 282
+        }
+      ],
+      "lane": "assembly",
+      "col": 2
+    },
+    {
+      "id": "pipeline",
+      "label": "SPC 与任务",
+      "sublabel": "pipeline / tasks.db",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 745,
+          "end_line": 815
+        }
+      ],
+      "lane": "assembly",
+      "col": 1
+    },
+    {
+      "id": "routes",
+      "label": "路由与探针",
+      "sublabel": "query / trace / health",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 1012,
+          "end_line": 1082
+        }
+      ],
+      "lane": "assembly",
+      "col": 0
+    },
+    {
+      "id": "workers",
+      "label": "后台线程",
+      "sublabel": "SPC / worker / GC",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 1279,
+          "end_line": 1349
+        }
+      ],
+      "lane": "runtime",
+      "col": 0
+    },
+    {
+      "id": "listen",
+      "label": "HTTP 监听",
+      "sublabel": "server.Start()",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 1581,
+          "end_line": 1629
+        }
+      ],
+      "lane": "runtime",
+      "col": 1
+    },
+    {
+      "id": "signal",
+      "label": "退出信号",
+      "sublabel": "SIGINT / SIGTERM",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 167,
+          "end_line": 237
+        }
+      ],
+      "lane": "runtime",
+      "col": 2
+    },
+    {
+      "id": "drain",
+      "label": "排空与释放",
+      "sublabel": "watcher / cron / RAII",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 1615,
+          "end_line": 1629
+        }
+      ],
+      "lane": "runtime",
+      "col": 3
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "from": "main",
+      "to": "cfg"
+    },
+    {
+      "id": "e1",
+      "from": "cfg",
+      "to": "auth"
+    },
+    {
+      "id": "e2",
+      "from": "auth",
+      "to": "cat"
+    },
+    {
+      "id": "e3",
+      "from": "cat",
+      "to": "pool"
+    },
+    {
+      "id": "e4",
+      "from": "pool",
+      "to": "model"
+    },
+    {
+      "id": "e5",
+      "from": "model",
+      "to": "pipeline"
+    },
+    {
+      "id": "e6",
+      "from": "pipeline",
+      "to": "routes"
+    },
+    {
+      "id": "e7",
+      "from": "routes",
+      "to": "workers"
+    },
+    {
+      "id": "e8",
+      "from": "workers",
+      "to": "listen"
+    },
+    {
+      "id": "e9",
+      "from": "listen",
+      "to": "signal"
+    },
+    {
+      "id": "e10",
+      "from": "signal",
+      "to": "drain"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "构造依赖",
+      "items": [
+        "DocumentProcessor → SPCManager → summary enqueue → WorkerPool。",
+        "bootstrap 使用后安装 seam 解决装配循环。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "关闭与恢复",
+      "items": [
+        "退出排空与下一次启动 WAL 恢复属于不同层次。",
+        "Pool 加载 Unit 时打开 store、ANN、PWL 并预热 memory.db。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "64d91eac-047f-4e05-b213-7fd59eb3ee81",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/10-mcp-sdk/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/10-mcp-sdk/10-mcp-sdk.html",
+  "specification": {
+    "sha256": "7aba4d96b10d0e977c41b1663489efdafe3128f26724a680884d59504980a49d",
+    "bytes": 5393
+  },
+  "artifact": {
+    "sha256": "93d1b8f43ba9fdc39bf675c3571ea6dbcef49c27c9a11f5e01248a896662ea41",
+    "bytes": 820060
+  }
+}

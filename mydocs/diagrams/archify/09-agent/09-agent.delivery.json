@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "f998287e-1c0d-4d0c-a16e-545822b59471",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/09-agent/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/09-agent/09-agent.html",
+  "specification": {
+    "sha256": "6ca8522bf401a03fd5cfe55f678ab248caa91d0368dc07b3f4aa6df8776be793",
+    "bytes": 4278
+  },
+  "artifact": {
+    "sha256": "6e6955235658c90a828cfc7410ac9e315df4a75ff3b41f2c80b2257f3bc9dde0",
+    "bytes": 813837
+  }
+}

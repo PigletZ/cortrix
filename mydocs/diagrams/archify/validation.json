@@ -1,0 +1,199 @@
+{
+  "status": "pass",
+  "diagrams": [
+    {
+      "name": "01-system",
+      "title": "Cortrix · 系统与模块架构",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "01-system/candidate.json",
+      "html": "01-system/01-system.html",
+      "receipt": "01-system/review-4/01-system.finalize-summary.json",
+      "specification_sha256": "0a4fa91fad07f9c48e84d92cf57deb8532697a1ebe184b7014b12e6058c38508",
+      "artifact_sha256": "be0a57e1058777932f189385821589a579e47ae10950b097c5979d0d91921346"
+    },
+    {
+      "name": "02-bootstrap",
+      "title": "Core · 启动装配与关闭",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "02-bootstrap/candidate.json",
+      "html": "02-bootstrap/02-bootstrap.html",
+      "receipt": "02-bootstrap/review-2/02-bootstrap.finalize-summary.json",
+      "specification_sha256": "3af7252bcfd331a3195dd996e96042ddbe48c1d2ad415b1aaa7406cd08820b52",
+      "artifact_sha256": "ef3e27154db291d958c9da45a4b499a34ee8553a4e992c28fb0f85cd3da6f92a"
+    },
+    {
+      "name": "03-ingest",
+      "title": "文档 · 入库与索引 IO",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "03-ingest/candidate.json",
+      "html": "03-ingest/03-ingest.html",
+      "receipt": "03-ingest/review-2/03-ingest.finalize-summary.json",
+      "specification_sha256": "d1bc95f891412f8f0e861edec5c4c330040ed485dfda9a1ecf1c538e5448e0b7",
+      "artifact_sha256": "ead798e3e1fcdab13c55e4850b9903043b3ca336a1b9ab0d55b9169517b231cd"
+    },
+    {
+      "name": "04-query",
+      "title": "查询 · 召回模块与 IO 架构",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "04-query/candidate.json",
+      "html": "04-query/04-query.html",
+      "receipt": "04-query/review-3/04-query.finalize-summary.json",
+      "specification_sha256": "b841ee7066670e479d40b6dc93050b7bac1cbd5c719c0d5e1f645e858647c943",
+      "artifact_sha256": "8bbc6e4745aaaf3e278dbc49e05ff2bf51c5f43dfbf82e0cc4c8350c0c3438e9"
+    },
+    {
+      "name": "05-query-sequence",
+      "title": "查询 · 跨 Namespace 调用时序",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "05-query-sequence/candidate.json",
+      "html": "05-query-sequence/05-query-sequence.html",
+      "receipt": "05-query-sequence/review-2/05-query-sequence.finalize-summary.json",
+      "specification_sha256": "85f25a2d71c2469456e34f05adc22d5581c1940fd60bd41f27be596f2efd4da3",
+      "artifact_sha256": "ac521d0a9b4f5f8b2064d1641ac625a4ca4caf736c53629b8c89673139cb3c33"
+    },
+    {
+      "name": "06-storage",
+      "title": "Cortrix · 逻辑资源与物理落盘",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "06-storage/candidate.json",
+      "html": "06-storage/06-storage.html",
+      "receipt": "06-storage/review-2/06-storage.finalize-summary.json",
+      "specification_sha256": "c5b4aa675db6a7922b4792002042998cf5a9156cbdbcc358aef415def81a04aa",
+      "artifact_sha256": "f9dabadf4a73fb18bca3938d7393afbaddbaf248ac8f56346b3a1479cc6003de"
+    },
+    {
+      "name": "07-write-recovery",
+      "title": "持久化 · SPC 写入与恢复",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "07-write-recovery/candidate.json",
+      "html": "07-write-recovery/07-write-recovery.html",
+      "receipt": "07-write-recovery/review-2/07-write-recovery.finalize-summary.json",
+      "specification_sha256": "b8ec6a7b378ef3f1d681d67b3d0b4e611877c2e97ef458044434442703756478",
+      "artifact_sha256": "54ce34c02607954a17b036405b6d45f957486752f2f284d1c376b6ef6b207ed1"
+    },
+    {
+      "name": "08-async",
+      "title": "F42 · 持久任务与解析进度",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "08-async/candidate.json",
+      "html": "08-async/08-async.html",
+      "receipt": "08-async/08-async.finalize-summary.json",
+      "specification_sha256": "e2265cbfe294db957afb0e478504966de47b2acf4cf3677defcc7d5ee1a2ed97",
+      "artifact_sha256": "7f966c9c209be6479449e04f7f49e290c68e2024d1e3d4182295bb83450a5611"
+    },
+    {
+      "name": "09-agent",
+      "title": "Agent · 固定 RAG 与 SSE 时序",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "09-agent/candidate.json",
+      "html": "09-agent/09-agent.html",
+      "receipt": "09-agent/review-2/09-agent.finalize-summary.json",
+      "specification_sha256": "6ca8522bf401a03fd5cfe55f678ab248caa91d0368dc07b3f4aa6df8776be793",
+      "artifact_sha256": "6e6955235658c90a828cfc7410ac9e315df4a75ff3b41f2c80b2257f3bc9dde0"
+    },
+    {
+      "name": "10-mcp-sdk",
+      "title": "接入 · MCP、SDK 与框架工具",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "10-mcp-sdk/candidate.json",
+      "html": "10-mcp-sdk/10-mcp-sdk.html",
+      "receipt": "10-mcp-sdk/review-2/10-mcp-sdk.finalize-summary.json",
+      "specification_sha256": "7aba4d96b10d0e977c41b1663489efdafe3128f26724a680884d59504980a49d",
+      "artifact_sha256": "93d1b8f43ba9fdc39bf675c3571ea6dbcef49c27c9a11f5e01248a896662ea41"
+    },
+    {
+      "name": "11-observability",
+      "title": "运维 · 链路、健康与日志",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "11-observability/candidate.json",
+      "html": "11-observability/11-observability.html",
+      "receipt": "11-observability/review-3/11-observability.finalize-summary.json",
+      "specification_sha256": "b33b7826d8381a35922c65e02a56acdd0df2bcfd1789fe232ad73034151a3382",
+      "artifact_sha256": "21a046b774143d6a0e8496baf90944e5b03c41d194415822be94377427c2bfa3"
+    },
+    {
+      "name": "12-delete-gc",
+      "title": "删除 · 双层 GC 与物理清理",
+      "status": "pass",
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "candidate": "12-delete-gc/candidate.json",
+      "html": "12-delete-gc/12-delete-gc.html",
+      "receipt": "12-delete-gc/review-2/12-delete-gc.finalize-summary.json",
+      "specification_sha256": "f93d08c04b5dcea5db2b38a008a55dc384348e2487d4828ae25d516390b89598",
+      "artifact_sha256": "9e4254bfb922997bf1a6ec374e456a94995e281385e416d9eb9115dc6e333baa"
+    }
+  ],
+  "errors": [],
+  "scope": "Schema, source references, layout, artifact and automated browser gates; not Cortrix runtime verification."
+}

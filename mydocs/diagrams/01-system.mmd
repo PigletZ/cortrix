@@ -1,0 +1,32 @@
+flowchart TB
+  User[用户 / 应用 / IDE Agent]
+  User --> Web[web: React + TypeScript + Vite]
+  User --> SDK[sdk/python: Sync / Async Client]
+  User --> MCP[cortrix-mcp: local stdio]
+  User --> Skills[cortrix-skills: tool descriptors / adapters]
+  Skills --> SDK
+  MCP -->|httpx HTTP JSON + identity headers| HTTP
+  SDK -->|HTTP JSON| HTTP
+  Web -->|fetch JSON / multipart / SSE| HTTP
+  HTTP[cortrix-server: cpp-httplib / api/v1] --> Routes[鉴权 / 限流 / 路由 / trace]
+  Routes --> Catalog[catalog: NS / Unit / content refs]
+  Routes --> Ingest[upload / connector / batch / async]
+  Ingest --> SPC[SPC: parse / chunk / enrich / embed / assemble]
+  Routes --> Query[query: router / scatter / hybrid / rerank]
+  Routes --> Memory[memory: store / search / transparency]
+  SPC --> Pool[resource: NamespacePool / Facade / UnitBundle]
+  Query --> Pool
+  Memory --> Pool
+  Pool --> Store[SQLite store.db / memory.db]
+  Pool --> ANN[P-HNSW / hnsw.wal / snapshots]
+  Pool --> Blob[Unit blob files]
+  Pool --> PWL[WriteCoordinator / pending.wal]
+  Routes --> AgentProxy[agent_proxy_routes]
+  AgentProxy -->|HTTP / SSE| Agent[cortrix-agent: FastAPI / ChatExecutor]
+  Agent --> SDK
+  Agent -->|stream_chat| LLM[外部 LLM / Ollama]
+  SPC -. 可选 enrichment / summary .-> LLM
+  Query -. 可选 query expansion / listwise .-> LLM
+  SPC --> ONNX[ONNX Runtime / tokenizer / local models]
+  Query --> ONNX
+  Catalog --> Global[catalog.db / platform.db / tasks.db]

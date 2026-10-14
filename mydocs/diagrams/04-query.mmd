@@ -1,0 +1,28 @@
+flowchart TD
+  Req[POST api/v1/query: query / namespaces / top_k / filter] --> Validate[parse / auth / authorize namespaces]
+  Validate --> Router[F39 complexity classifier: ONNX 或 heuristic]
+  Router -->|chat 路由| Facts[按用户查 user_facts / 跳过检索]
+  Router -->|simple / complex| Scatter[ScatterGather + ExecutorEngine]
+  Scatter --> Acquire[每个 namespace 获取 NamespaceFacade]
+  Acquire --> Gran{granularity}
+  Gran -->|chunk| Chunk[LiveSingleUnitExecutor chunk path]
+  Gran -->|doc| Doc[doc summary ANN / doc FTS5]
+  Gran -->|auto / both| Both[chunk + doc → doc_id 级融合]
+  Both --> Chunk
+  Both --> Doc
+  Chunk --> Dense[query embedding → P-HNSW dense]
+  Chunk --> BM25[SQLite FTS5 / BM25]
+  Chunk -. 启用且可用 .-> Sparse[sparse embedding → sparse index]
+  Dense --> Resolve[解引用 child / contextual label / HyPE source]
+  BM25 --> Resolve
+  Sparse --> Resolve
+  Resolve --> RRF[多路径 RRF / 过滤 / 候选过采样]
+  RRF --> Rerank[可选 ONNX cross-encoder + score fusion]
+  Rerank --> Local[每 NS top_k + metadata]
+  Doc --> Local
+  Local --> Gather[排序 / content_hash 去重 / global top_k]
+  Gather -. 开关与依赖满足 .-> RAG[RAG-Fusion 多 query 变体与二次检索]
+  Gather --> Post[可选 CRAG / LLM listwise 阶段]
+  RAG --> Post
+  Post --> Response[results + coverage_ratio + namespaces_failed + explain]
+  Facts --> Response

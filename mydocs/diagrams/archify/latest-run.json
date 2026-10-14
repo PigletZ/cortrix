@@ -1,0 +1,126 @@
+[
+  {
+    "name": "04-query",
+    "status": "pass",
+    "gates": {
+      "validate": "pass",
+      "deliver": "pass",
+      "check": "pass",
+      "browser-check": "pass"
+    },
+    "diagnostics": [],
+    "recommendation": {
+      "action": "inspect-route-readability",
+      "signals": {
+        "resolvedCrossovers": 3,
+        "routesOverSuggestedBends": 2
+      },
+      "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+      "affectedRoutes": {
+        "crossings": [
+          {
+            "left": {
+              "id": "e0",
+              "from": "req",
+              "to": "auth",
+              "label": "",
+              "collectionIndex": 0,
+              "artifactIndex": 1
+            },
+            "right": {
+              "id": "e10",
+              "from": "scope",
+              "to": "doc",
+              "label": "doc/both",
+              "collectionIndex": 10,
+              "artifactIndex": 11
+            },
+            "point": [
+              254,
+              78
+            ]
+          },
+          {
+            "left": {
+              "id": "e2",
+              "from": "auth",
+              "to": "facts",
+              "label": "chat",
+              "collectionIndex": 2,
+              "artifactIndex": 3
+            },
+            "right": {
+              "id": "e12",
+              "from": "rrf",
+              "to": "rank",
+              "label": "rerank",
+              "collectionIndex": 12,
+              "artifactIndex": 13
+            },
+            "point": [
+              306,
+              408
+            ]
+          },
+          {
+            "left": {
+              "id": "e12",
+              "from": "rrf",
+              "to": "rank",
+              "label": "rerank",
+              "collectionIndex": 12,
+              "artifactIndex": 13
+            },
+            "right": {
+              "id": "e14",
+              "from": "doc",
+              "to": "gather",
+              "label": "doc结果",
+              "collectionIndex": 14,
+              "artifactIndex": 15
+            },
+            "point": [
+              254,
+              408
+            ]
+          }
+        ],
+        "detours": [
+          {
+            "relationship": {
+              "id": "e2",
+              "from": "auth",
+              "to": "facts",
+              "label": "chat",
+              "collectionIndex": 2,
+              "artifactIndex": 3
+            },
+            "bends": 3,
+            "stretch": 1.043
+          },
+          {
+            "relationship": {
+              "id": "e10",
+              "from": "scope",
+              "to": "doc",
+              "label": "doc/both",
+              "collectionIndex": 10,
+              "artifactIndex": 11
+            },
+            "bends": 3,
+            "stretch": 1.05
+          }
+        ],
+        "truncated": false
+      },
+      "hints": [
+        "req → auth crosses scope → doc: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+        "auth → facts crosses rrf → rank: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+        "rrf → rank crosses doc → gather: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+        "auth → facts needs 3 bends: move node auth or facts so they share a row or column with matching centers, or sit diagonally with a clear corner.",
+        "scope → doc needs 3 bends: move node scope or doc so they share a row or column with matching centers, or sit diagonally with a clear corner."
+      ],
+      "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+    }
+  }
+]

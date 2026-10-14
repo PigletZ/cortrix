@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "运维 · 链路、健康与日志",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/11-observability/11-observability.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "request",
+      "label": "HTTP 请求",
+      "sublabel": "identity headers",
+      "type": "external",
+      "sources": [
+        {
+          "path": "src/agent_trace/http_observability_middleware.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "trace",
+      "label": "Trace middleware",
+      "sublabel": "EngineInstrumentation",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/agent_trace/engine_instrumentation.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        380,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "cat",
+      "label": "catalog.db",
+      "sublabel": "agent_trace / op log",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/agent_trace/agent_trace_writer_impl.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        720,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "ops",
+      "label": "业务操作",
+      "sublabel": "OperationLogEmitter",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/observability/operation_log_emitter.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        40,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "health",
+      "label": "Readiness",
+      "sublabel": "live / ready probes",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/health/readiness.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        380,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "memory",
+      "label": "memory.db",
+      "sublabel": "interaction / sources",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/agent_trace/interactions_handler.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        720,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "probes",
+      "label": "组件探针",
+      "sublabel": "disk / SPC / models",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 1285,
+          "end_line": 1355
+        }
+      ],
+      "pos": [
+        40,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "metrics",
+      "label": "MetricsServer",
+      "sublabel": "module counters",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/deploy/metrics_server.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        380,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "cleanup",
+      "label": "清理线程",
+      "sublabel": "trace / interactions",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/agent_trace/interaction_log_sweeper.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "pos": [
+        720,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "globalclean",
+      "type": "backend",
+      "label": "全局日志清理",
+      "sublabel": "CleanupScheduler",
+      "pos": [
+        720,
+        535
+      ],
+      "size": [
+        190,
+        76
+      ],
+      "sources": [
+        {
+          "path": "src/observability/cleanup_scheduler.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "e0",
+      "from": "request",
+      "to": "trace",
+      "label": "请求上下文"
+    },
+    {
+      "id": "e1",
+      "from": "trace",
+      "to": "cat",
+      "label": "trace write"
+    },
+    {
+      "id": "e2",
+      "from": "ops",
+      "to": "cat",
+      "label": "操作日志"
+    },
+    {
+      "id": "e3",
+      "from": "probes",
+      "to": "health",
+      "label": "状态组合"
+    },
+    {
+      "id": "e4",
+      "from": "cleanup",
+      "to": "memory",
+      "label": "清理"
+    },
+    {
+      "id": "e5",
+      "from": "globalclean",
+      "to": "cat",
+      "label": "清理"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "存储与职责",
+      "items": [
+        "agent_trace 全局存 catalog.db；interaction_log / sources 位于各 NS 的 memory.db。",
+        "全局清理由 ObservabilityModule/CleanupScheduler 执行；InteractionLogSweeper 遍历各 NS。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "健康与指标",
+      "items": [
+        "ready 不是所有 namespace 的实际检索验证。",
+        "metrics 独立于 trace/op log；运行日志另由 spdlog 输出。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Agent · 固定 RAG 与 SSE 时序",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/09-agent/09-agent.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "participants": [
+    {
+      "id": "ui",
+      "label": "Web / Client",
+      "sublabel": "chat request",
+      "type": "frontend",
+      "sources": [
+        {
+          "path": "web/src/routes.tsx",
+          "line": 1,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "proxy",
+      "label": "Core 代理",
+      "sublabel": "HTTP / SSE",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/routes/agent_proxy_routes.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "route",
+      "label": "FastAPI",
+      "sublabel": "chat / sessions",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "cortrix-agent/routes/chat.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "exec",
+      "label": "ChatExecutor",
+      "sublabel": "prompt / retry",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "cortrix-agent/agent_core/executor.py",
+          "line": 97,
+          "end_line": 167
+        }
+      ]
+    },
+    {
+      "id": "sdk",
+      "label": "Python SDK",
+      "sublabel": "Cortrix query",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "cortrix-agent/agent_core/sdk_rag.py",
+          "line": 1,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "llm",
+      "label": "LLM adapter",
+      "sublabel": "stream_chat",
+      "type": "external",
+      "sources": [
+        {
+          "path": "cortrix-agent/agent_core/executor.py",
+          "line": 169,
+          "end_line": 224
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": "m0",
+      "from": "ui",
+      "to": "proxy",
+      "label": "聊天请求",
+      "y": 180
+    },
+    {
+      "id": "m1",
+      "from": "proxy",
+      "to": "route",
+      "label": "转发 HTTP",
+      "y": 225
+    },
+    {
+      "id": "m2",
+      "from": "route",
+      "to": "exec",
+      "label": "message / ChatContext",
+      "y": 270,
+      "note": "SessionStore 是进程内 dict，保留最近 10 turns"
+    },
+    {
+      "id": "m3",
+      "from": "exec",
+      "to": "sdk",
+      "label": "retrieve(message, namespace)",
+      "y": 350,
+      "note": "最多 3 次尝试；失败耗尽后以空上下文降级"
+    },
+    {
+      "id": "m4",
+      "from": "sdk",
+      "to": "exec",
+      "label": "chunks / source_path / meta",
+      "y": 430,
+      "variant": "return"
+    },
+    {
+      "id": "m5",
+      "from": "exec",
+      "to": "sdk",
+      "label": "best-effort 文档清单",
+      "y": 475
+    },
+    {
+      "id": "m6",
+      "from": "sdk",
+      "to": "exec",
+      "label": "文档名称与来源",
+      "y": 520,
+      "variant": "return"
+    },
+    {
+      "id": "m7",
+      "from": "exec",
+      "to": "llm",
+      "label": "stream_chat(prompt, message)",
+      "y": 565,
+      "note": "prompt 合入来源和历史；仅固定 RAG，无自主 tool planning"
+    },
+    {
+      "id": "m8",
+      "from": "llm",
+      "to": "exec",
+      "label": "文本片段",
+      "y": 645,
+      "variant": "return"
+    },
+    {
+      "id": "m9",
+      "from": "exec",
+      "to": "route",
+      "label": "StreamEvent chunk / meta",
+      "y": 690,
+      "variant": "return"
+    },
+    {
+      "id": "m10",
+      "from": "route",
+      "to": "proxy",
+      "label": "SSE data / DONE",
+      "y": 735,
+      "variant": "return"
+    },
+    {
+      "id": "m11",
+      "from": "proxy",
+      "to": "ui",
+      "label": "流式回答",
+      "y": 780,
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两类 chat",
+      "items": [
+        "本图是 Python 固定 RAG 聊天；C++ query classifier 的 chat_memory_only 是不同路径。",
+        "外部 LLM/Agent 未在默认 Quick Start 启动。"
+      ]
+    }
+  ]
+}

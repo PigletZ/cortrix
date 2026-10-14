@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "105f35d7-685f-48b6-81e8-05c8595a8746",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/07-write-recovery/07-write-recovery.html",
+  "specification": {
+    "sha256": "b8ec6a7b378ef3f1d681d67b3d0b4e611877c2e97ef458044434442703756478",
+    "bytes": 3929
+  },
+  "artifact": {
+    "sha256": "54ce34c02607954a17b036405b6d45f957486752f2f284d1c376b6ef6b207ed1",
+    "bytes": 811599
+  }
+}

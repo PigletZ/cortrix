@@ -1,0 +1,374 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "文档 · 入库与索引 IO",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/03-ingest/03-ingest.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "lanes": [
+    {
+      "id": "entry",
+      "label": "输入与受理"
+    },
+    {
+      "id": "process",
+      "label": "解析与分块"
+    },
+    {
+      "id": "enrich",
+      "label": "增强与向量"
+    },
+    {
+      "id": "write",
+      "label": "持久化与结果"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "upload",
+      "label": "接收文件",
+      "sublabel": "filename / MIME / metadata",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/upload/upload_handler.cpp",
+          "line": 169,
+          "end_line": 239
+        }
+      ],
+      "lane": "entry",
+      "col": 0
+    },
+    {
+      "id": "raw",
+      "label": "创建与存源",
+      "sublabel": "doc_create / blob.store",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/upload/upload_handler.cpp",
+          "line": 186,
+          "end_line": 250
+        }
+      ],
+      "lane": "entry",
+      "col": 1
+    },
+    {
+      "id": "queue",
+      "label": "提交 SPC",
+      "sublabel": "SPCTask / priority",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/upload/upload_handler.cpp",
+          "line": 194,
+          "end_line": 250
+        }
+      ],
+      "lane": "entry",
+      "col": 2
+    },
+    {
+      "id": "level",
+      "label": "处理级别",
+      "sublabel": "L0 / L1 / L2 / L3",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 127,
+          "end_line": 197
+        }
+      ],
+      "lane": "entry",
+      "col": 3
+    },
+    {
+      "id": "skip",
+      "label": "L0 / L1",
+      "sublabel": "跳过 / metadata-only",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 220,
+          "end_line": 290
+        }
+      ],
+      "lane": "entry",
+      "col": 4
+    },
+    {
+      "id": "parse",
+      "label": "ParserFactory",
+      "sublabel": "Docling / OCR / fallback",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 264,
+          "end_line": 334
+        }
+      ],
+      "lane": "process",
+      "col": 3
+    },
+    {
+      "id": "chunk",
+      "label": "父子分块",
+      "sublabel": "parents / children",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 296,
+          "end_line": 366
+        }
+      ],
+      "lane": "process",
+      "col": 2
+    },
+    {
+      "id": "meta",
+      "label": "META 生成",
+      "sublabel": "文档级元数据",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 335,
+          "end_line": 405
+        }
+      ],
+      "lane": "process",
+      "col": 1
+    },
+    {
+      "id": "enrich",
+      "label": "可选增强",
+      "sublabel": "F03 / F35 / HyPE",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 376,
+          "end_line": 446
+        }
+      ],
+      "lane": "enrich",
+      "col": 1
+    },
+    {
+      "id": "embed",
+      "label": "L3 embedding",
+      "sublabel": "dense / 可选 sparse",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 496,
+          "end_line": 566
+        }
+      ],
+      "lane": "enrich",
+      "col": 2
+    },
+    {
+      "id": "clean",
+      "label": "清洗与评分",
+      "sublabel": "skip-index / signals",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 640,
+          "end_line": 710
+        }
+      ],
+      "lane": "enrich",
+      "col": 3
+    },
+    {
+      "id": "begin",
+      "label": "BeginWrite",
+      "sublabel": "writes_blob=false",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 184,
+          "end_line": 254
+        }
+      ],
+      "lane": "write",
+      "col": 3
+    },
+    {
+      "id": "stores",
+      "label": "写索引与块",
+      "sublabel": "FTS5 / ANN / SQLite",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 855,
+          "end_line": 925
+        }
+      ],
+      "lane": "write",
+      "col": 2
+    },
+    {
+      "id": "commit",
+      "label": "提交与完成",
+      "sublabel": "Commit / task done",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 138,
+          "end_line": 208
+        }
+      ],
+      "lane": "write",
+      "col": 1
+    },
+    {
+      "id": "rollback",
+      "label": "核心失败",
+      "sublabel": "Rollback / compensation",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 869,
+          "end_line": 939
+        }
+      ],
+      "lane": "write",
+      "col": 4
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "from": "upload",
+      "to": "raw"
+    },
+    {
+      "id": "e1",
+      "from": "raw",
+      "to": "queue"
+    },
+    {
+      "id": "e2",
+      "from": "queue",
+      "to": "level"
+    },
+    {
+      "id": "e3",
+      "from": "level",
+      "to": "skip",
+      "label": "L0/L1",
+      "role": "branch"
+    },
+    {
+      "id": "e4",
+      "from": "level",
+      "to": "parse",
+      "label": "L2/L3"
+    },
+    {
+      "id": "e5",
+      "from": "parse",
+      "to": "chunk",
+      "label": "ParsedDoc"
+    },
+    {
+      "id": "e6",
+      "from": "chunk",
+      "to": "meta"
+    },
+    {
+      "id": "e7",
+      "from": "meta",
+      "to": "enrich"
+    },
+    {
+      "id": "e8",
+      "from": "enrich",
+      "to": "embed",
+      "label": "L3"
+    },
+    {
+      "id": "e9",
+      "from": "enrich",
+      "to": "clean",
+      "label": "L2",
+      "role": "branch"
+    },
+    {
+      "id": "e10",
+      "from": "embed",
+      "to": "clean"
+    },
+    {
+      "id": "e11",
+      "from": "clean",
+      "to": "begin",
+      "label": "assemble"
+    },
+    {
+      "id": "e12",
+      "from": "begin",
+      "to": "stores"
+    },
+    {
+      "id": "e13",
+      "from": "stores",
+      "to": "commit",
+      "label": "成功"
+    },
+    {
+      "id": "e14",
+      "from": "stores",
+      "to": "rollback",
+      "label": "失败",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Blob 与协调器",
+      "items": [
+        "上传先保存来源 blob；本图的普通文档 post-parse BeginWrite 指定 writes_blob=false。",
+        "协调器的一般接口支持检查 blob，但不能将其等同于本次上传的完整事务。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "辅助产品",
+      "items": [
+        "enrichment/contextual/sparse/score 的部分写入 fail-soft。",
+        "F41 summary 是可选异步产品；主任务完成不保证摘要已生成。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "异步入口",
+      "items": [
+        "大文档 F42 在独立 worker 解析后直接进入 ProcessParsed。",
+        "memory 专用 SPC 路径绕过普通文件 parse/chunk。"
+      ]
+    }
+  ]
+}

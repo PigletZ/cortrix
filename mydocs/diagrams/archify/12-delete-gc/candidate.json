@@ -1,0 +1,273 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "删除 · 双层 GC 与物理清理",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "lanes": [
+    {
+      "id": "catalog",
+      "label": "全局内容引用 GC"
+    },
+    {
+      "id": "document",
+      "label": "Unit 文档 GC"
+    },
+    {
+      "id": "guard",
+      "label": "执行条件与恢复"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "candidates",
+      "label": "引用候选",
+      "sublabel": "file_locations deleted",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/catalog/gc/gc_manager.cpp",
+          "line": 35,
+          "end_line": 105
+        }
+      ],
+      "lane": "catalog",
+      "col": 0
+    },
+    {
+      "id": "refs",
+      "label": "引用检查",
+      "sublabel": "ref_count / windows",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/gc_manager.cpp",
+          "line": 83,
+          "end_line": 153
+        }
+      ],
+      "lane": "catalog",
+      "col": 1
+    },
+    {
+      "id": "queue",
+      "label": "GC 队列",
+      "sublabel": "blob_gc_queue",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/gc_manager.cpp",
+          "line": 89,
+          "end_line": 159
+        }
+      ],
+      "lane": "catalog",
+      "col": 2
+    },
+    {
+      "id": "sink",
+      "label": "全局 Blob sink",
+      "sublabel": "data_dir/blobs",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/blob_gc_sink.cpp",
+          "line": 1,
+          "end_line": 27
+        }
+      ],
+      "lane": "catalog",
+      "col": 3
+    },
+    {
+      "id": "deleted",
+      "label": "软删除文档",
+      "sublabel": "deleted_at / retention",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/catalog/gc/document_gc_sweeper.cpp",
+          "line": 42,
+          "end_line": 112
+        }
+      ],
+      "lane": "document",
+      "col": 0
+    },
+    {
+      "id": "facade",
+      "label": "Unit 资源",
+      "sublabel": "NamespaceFacade",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/document_gc_sweeper.cpp",
+          "line": 57,
+          "end_line": 127
+        }
+      ],
+      "lane": "document",
+      "col": 1
+    },
+    {
+      "id": "vectors",
+      "label": "向量删除标记",
+      "sublabel": "MarkDelete",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/document_gc_sweeper.cpp",
+          "line": 73,
+          "end_line": 143
+        }
+      ],
+      "lane": "document",
+      "col": 2
+    },
+    {
+      "id": "blob",
+      "label": "删除 Unit blob",
+      "sublabel": "facade.blob().del",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/document_gc_sweeper.cpp",
+          "line": 80,
+          "end_line": 148
+        }
+      ],
+      "lane": "document",
+      "col": 3
+    },
+    {
+      "id": "rows",
+      "label": "删除块与文档",
+      "sublabel": "block/doc delete",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/document_gc_sweeper.cpp",
+          "line": 83,
+          "end_line": 148
+        }
+      ],
+      "lane": "document",
+      "col": 4
+    },
+    {
+      "id": "gc",
+      "label": "后台 GC cycle",
+      "sublabel": "enabled / caps / dry_run",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/gc_thread.cpp",
+          "line": 1,
+          "end_line": 65
+        }
+      ],
+      "lane": "guard",
+      "col": 1
+    },
+    {
+      "id": "restore",
+      "label": "保留期内恢复",
+      "sublabel": "Restore / soft-deleted",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/catalog/gc/document_gc_sweeper.cpp",
+          "line": 93,
+          "end_line": 148
+        }
+      ],
+      "lane": "guard",
+      "col": 3
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "from": "candidates",
+      "to": "refs"
+    },
+    {
+      "id": "e1",
+      "from": "refs",
+      "to": "queue",
+      "label": "无引用"
+    },
+    {
+      "id": "e2",
+      "from": "queue",
+      "to": "sink",
+      "label": "unlink"
+    },
+    {
+      "id": "e3",
+      "from": "deleted",
+      "to": "facade",
+      "label": "到期"
+    },
+    {
+      "id": "e4",
+      "from": "facade",
+      "to": "vectors"
+    },
+    {
+      "id": "e5",
+      "from": "vectors",
+      "to": "blob"
+    },
+    {
+      "id": "e6",
+      "from": "blob",
+      "to": "rows"
+    },
+    {
+      "id": "e7",
+      "from": "gc",
+      "to": "refs",
+      "label": "layer1"
+    },
+    {
+      "id": "e8",
+      "from": "gc",
+      "to": "facade",
+      "label": "layer2"
+    },
+    {
+      "id": "e9",
+      "from": "restore",
+      "to": "deleted",
+      "label": "恢复软删",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两个物理路径",
+      "items": [
+        "全局 GcManager 处理内容引用与全局 blobs；DocumentGcSweeper 处理 Unit 文档。",
+        "Unit 清理顺序是 MarkDelete → blob.del → block/doc delete。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "条件与边界",
+      "items": [
+        "retention、dry_run、max_purge_per_run 控制执行。",
+        "默认删除请求不等于立即回收文件；watcher 移除还会清除导入文档。"
+      ]
+    }
+  ]
+}

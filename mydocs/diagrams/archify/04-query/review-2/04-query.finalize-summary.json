@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/candidate.json",
+    "sha256": "a223743fe99873c3bf019d393fdeb5a8a135d4fdf1178f56b927b55722ab3e2b",
+    "bytes": 8767
+  },
+  "artifact": {
+    "path": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/04-query.html",
+    "sha256": "930dbf86d2af889830cc3ebc04283049075f69d18498a0bd9bc0b6f72c8551a5",
+    "bytes": 836287
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/review-2/04-query.finalize.json",
+    "summaryReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/review-2/04-query.finalize-summary.json",
+    "browserCheckReceipt": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/review-2/04-query.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-14T03:40:26.031Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 4635,
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 7,
+      "routesOverSuggestedBends": 4,
+      "routesOverSuggestedStretch": 2
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "e4",
+            "from": "scope",
+            "to": "dense",
+            "label": "chunk",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "e5",
+            "from": "scope",
+            "to": "bm25",
+            "label": "词项",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "point": [
+            860,
+            140
+          ],
+          "sharedNode": "scope"
+        },
+        {
+          "left": {
+            "id": "e4",
+            "from": "scope",
+            "to": "dense",
+            "label": "chunk",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "e8",
+            "from": "bm25",
+            "to": "resolve",
+            "label": "候选",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "point": [
+            813,
+            408
+          ]
+        },
+        {
+          "left": {
+            "id": "e4",
+            "from": "scope",
+            "to": "dense",
+            "label": "chunk",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "e14",
+            "from": "doc",
+            "to": "gather",
+            "label": "doc结果",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            834,
+            181
+          ]
+        },
+        {
+          "left": {
+            "id": "e5",
+            "from": "scope",
+            "to": "bm25",
+            "label": "词项",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "right": {
+            "id": "e14",
+            "from": "doc",
+            "to": "gather",
+            "label": "doc结果",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            860,
+            181
+          ]
+        },
+        {
+          "left": {
+            "id": "e11",
+            "from": "resolve",
+            "to": "rrf",
+            "label": "",
+            "collectionIndex": 11,
+            "artifactIndex": 12
+          },
+          "right": {
+            "id": "e17",
+            "from": "facts",
+            "to": "response",
+            "label": "facts",
+            "collectionIndex": 17,
+            "artifactIndex": 18
+          },
+          "point": [
+            596,
+            573
+          ]
+        },
+        {
+          "left": {
+            "id": "e12",
+            "from": "rrf",
+            "to": "rank",
+            "label": "rerank",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "right": {
+            "id": "e14",
+            "from": "doc",
+            "to": "gather",
+            "label": "doc结果",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            254,
+            573
+          ]
+        },
+        {
+          "left": {
+            "id": "e14",
+            "from": "doc",
+            "to": "gather",
+            "label": "doc结果",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "right": {
+            "id": "e17",
+            "from": "facts",
+            "to": "response",
+            "label": "facts",
+            "collectionIndex": 17,
+            "artifactIndex": 18
+          },
+          "point": [
+            254,
+            250
+          ]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "e4",
+            "from": "scope",
+            "to": "dense",
+            "label": "chunk",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "bends": 3,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "e6",
+            "from": "scope",
+            "to": "sparse",
+            "label": "启用时",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "bends": 4,
+          "stretch": 1.627,
+          "directCorridorBlockers": [
+            {
+              "id": "doc",
+              "label": "文档级发现",
+              "box": [
+                910,
+                205,
+                190,
+                76
+              ]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "e8",
+            "from": "bm25",
+            "to": "resolve",
+            "label": "候选",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "bends": 4,
+          "stretch": 1.697,
+          "directCorridorBlockers": [
+            {
+              "id": "dense",
+              "label": "Dense ANN",
+              "box": [
+                620,
+                370,
+                190,
+                76
+              ]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "e14",
+            "from": "doc",
+            "to": "gather",
+            "label": "doc结果",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "bends": 3,
+          "stretch": 1.037
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "scope → dense and scope → bm25 cross next to scope: move node dense or bm25 so the two reach scope from different sides (for example one level with it, one directly above or below it).",
+      "scope → dense crosses bm25 → resolve: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "scope → dense crosses doc → gather: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "scope → bm25 crosses doc → gather: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "resolve → rrf crosses facts → response: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "rrf → rank crosses doc → gather: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "doc → gather crosses facts → response: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "scope → dense needs 3 bends: move node scope or dense so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

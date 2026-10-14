@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a539b1e6-6ddf-440c-9172-263955d8654c",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/02-bootstrap/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/02-bootstrap/02-bootstrap.html",
+  "specification": {
+    "sha256": "3af7252bcfd331a3195dd996e96042ddbe48c1d2ad415b1aaa7406cd08820b52",
+    "bytes": 5719
+  },
+  "artifact": {
+    "sha256": "ef3e27154db291d958c9da45a4b499a34ee8553a4e992c28fb0f85cd3da6f92a",
+    "bytes": 819702
+  }
+}

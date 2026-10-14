@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "49b37233-45b9-4e96-9b26-322ac6817d44",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/04-query/04-query.html",
+  "specification": {
+    "sha256": "b841ee7066670e479d40b6dc93050b7bac1cbd5c719c0d5e1f645e858647c943",
+    "bytes": 8767
+  },
+  "artifact": {
+    "sha256": "8bbc6e4745aaaf3e278dbc49e05ff2bf51c5f43dfbf82e0cc4c8350c0c3438e9",
+    "bytes": 835893
+  }
+}

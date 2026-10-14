@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "f5df3c19-2258-4d10-be23-a7a01abd7d28",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/06-storage/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/06-storage/06-storage.html",
+  "specification": {
+    "sha256": "c5b4aa675db6a7922b4792002042998cf5a9156cbdbcc358aef415def81a04aa",
+    "bytes": 6119
+  },
+  "artifact": {
+    "sha256": "f9dabadf4a73fb18bca3938d7393afbaddbaf248ac8f56346b3a1479cc6003de",
+    "bytes": 822274
+  }
+}

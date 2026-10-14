@@ -1,0 +1,11 @@
+flowchart TD
+  Req[document / namespace delete] --> API[routes / namespace manager / catalog]
+  API --> Logical[logical delete / content-reference update]
+  Logical --> Queue[catalog GC state / blob_gc_queue]
+  Queue --> GC[GcThread → GcManager / DocumentGcSweeper]
+  GC --> Ref{remaining references?}
+  Ref -->|yes| Keep[retain shared resources]
+  Ref -->|no| Clean[block / vector / parent / document cleanup]
+  Clean --> Sink[LocalBlobGcSink]
+  Sink --> FS[delete eligible blob files]
+  GC --> Audit[metrics / log / retry state]

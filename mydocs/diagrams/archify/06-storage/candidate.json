@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Cortrix · 逻辑资源与物理落盘",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/06-storage/06-storage.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "ns",
+      "label": "Namespace",
+      "sublabel": "逻辑集合 / Unit 路由",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 341,
+          "end_line": 411
+        }
+      ],
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "pool",
+      "label": "资源池",
+      "sublabel": "UnitBundle / Facade",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/resource/namespace_pool.cpp",
+          "line": 207,
+          "end_line": 277
+        }
+      ],
+      "pos": [
+        380,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "global",
+      "label": "全局 SQLite",
+      "sublabel": "platform / catalog / tasks",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 324,
+          "end_line": 394
+        }
+      ],
+      "pos": [
+        720,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "store",
+      "label": "store.db",
+      "sublabel": "blocks / parents / FTS5",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/resource/namespace_pool.cpp",
+          "line": 66,
+          "end_line": 136
+        }
+      ],
+      "pos": [
+        40,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "unit",
+      "label": "units / unit_id",
+      "sublabel": "由 pool 创建与装配",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 367,
+          "end_line": 437
+        }
+      ],
+      "pos": [
+        380,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "mem",
+      "label": "memory.db",
+      "sublabel": "交互 / 来源 / memory",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/resource/namespace_pool.cpp",
+          "line": 407,
+          "end_line": 477
+        }
+      ],
+      "pos": [
+        720,
+        205
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "pwl",
+      "label": "pending.wal",
+      "sublabel": "跨存储意图日志",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/store/write_coordinator.cpp",
+          "line": 32,
+          "end_line": 102
+        }
+      ],
+      "pos": [
+        40,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "ann",
+      "label": "hnsw.wal / 快照",
+      "sublabel": "vector log / graph",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/store/phnsw/phnsw.cpp",
+          "line": 110,
+          "end_line": 180
+        }
+      ],
+      "pos": [
+        380,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "blob",
+      "label": "blob / doc_id",
+      "sublabel": "Unit 来源文件",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/resource/namespace_pool.cpp",
+          "line": 70,
+          "end_line": 140
+        }
+      ],
+      "pos": [
+        720,
+        370
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "sparse",
+      "label": "sparse_index.db",
+      "sublabel": "按 namespace 索引",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 756,
+          "end_line": 826
+        }
+      ],
+      "pos": [
+        40,
+        535
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "gcroot",
+      "label": "全局 blobs",
+      "sublabel": "content-addressed GC",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/server/bootstrap.cpp",
+          "line": 350,
+          "end_line": 420
+        }
+      ],
+      "pos": [
+        380,
+        535
+      ],
+      "size": [
+        190,
+        76
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "e0",
+      "from": "ns",
+      "to": "pool",
+      "label": "路由"
+    },
+    {
+      "id": "e1",
+      "from": "pool",
+      "to": "unit",
+      "label": "装配"
+    },
+    {
+      "id": "e2",
+      "from": "unit",
+      "to": "store",
+      "label": "SQLite"
+    },
+    {
+      "id": "e3",
+      "from": "unit",
+      "to": "mem",
+      "label": "SQLite"
+    },
+    {
+      "id": "e4",
+      "from": "unit",
+      "to": "ann",
+      "label": "向量"
+    },
+    {
+      "id": "e5",
+      "from": "unit",
+      "to": "blob",
+      "label": "文件"
+    },
+    {
+      "id": "e6",
+      "from": "unit",
+      "to": "pwl",
+      "label": "协调日志"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "路径根",
+      "items": [
+        "前三个全局 DB 直接位于 data_dir；Unit 资源在 data_dir/units/unit_id。",
+        "SparseIndexRegistry 位于 data_dir/namespace/sparse_index.db；不是 Unit store.db。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "独立文件",
+      "items": [
+        "全局 blobs GC sink 与 Unit blob/ 是两个不同物理路径。",
+        "全局 DB、sparse registry、GC sink 分属各服务所有者，不由 UnitBundle 包含。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "三种 WAL",
+      "items": [
+        "SQLite -wal 只恢复数据库页；hnsw.wal 恢复向量图；pending.wal 协调操作意图。",
+        "图中落盘关系不表示跨文件 ACID 事务。"
+      ]
+    }
+  ]
+}

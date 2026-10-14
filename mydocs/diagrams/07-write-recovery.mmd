@@ -1,0 +1,25 @@
+sequenceDiagram
+  participant S as SPCPipeline
+  participant W as WriteCoordinator
+  participant P as pending.wal
+  participant B as Blob store
+  participant V as PHnsw
+  participant D as SQLite store
+  S->>W: BeginWrite(doc_id, block_ids, has_blob)
+  W->>P: append PENDING / group commit
+  W-->>S: TxnHandle
+  S->>B: source blob when required
+  S->>V: AddPoints
+  V->>V: append hnsw.wal → fdatasync → apply graph
+  S->>D: parents / blocks / FTS5 / auxiliary rows
+  alt primary writes successful
+    S->>W: Commit(txn)
+    W->>P: append COMMITTED / retry / optional compact
+  else primary write failed
+    S->>W: Rollback(txn)
+    W->>D: compensating cleanup callback
+    W->>V: remove failed write points
+    W->>P: terminal rollback record
+  end
+  Note over W,D: No distributed SQL transaction across these stores
+  Note over W,P: Restart: read pending records, probe required stores, infer commit or compensate

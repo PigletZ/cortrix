@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c3ec3c0b-8339-4fc3-a4b1-92d966a21e72",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/candidate.json",
+  "output": "/data/zjh/cortrix/main/cortrix/mydocs/diagrams/archify/12-delete-gc/12-delete-gc.html",
+  "specification": {
+    "sha256": "f93d08c04b5dcea5db2b38a008a55dc384348e2487d4828ae25d516390b89598",
+    "bytes": 5752
+  },
+  "artifact": {
+    "sha256": "9e4254bfb922997bf1a6ec374e456a94995e281385e416d9eb9115dc6e333baa",
+    "bytes": 821206
+  }
+}

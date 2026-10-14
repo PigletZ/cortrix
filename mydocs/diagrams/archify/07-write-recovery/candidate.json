@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "持久化 · SPC 写入与恢复",
+    "locale": "zh-CN",
+    "output": "mydocs/diagrams/archify/07-write-recovery/07-write-recovery.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/PigletZ/cortrix.git",
+      "revision": "351f48958cc48bef47f35cf81d6809bc6a5be7a2",
+      "link_mode": "local-only"
+    }
+  },
+  "participants": [
+    {
+      "id": "spc",
+      "label": "SPC",
+      "sublabel": "ProcessParsed",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 184,
+          "end_line": 254
+        }
+      ]
+    },
+    {
+      "id": "coord",
+      "label": "协调器",
+      "sublabel": "WriteCoordinator",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "src/store/write_coordinator.cpp",
+          "line": 183,
+          "end_line": 253
+        }
+      ]
+    },
+    {
+      "id": "pwl",
+      "label": "pending.wal",
+      "sublabel": "意图与终态",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/store/write_coordinator.cpp",
+          "line": 255,
+          "end_line": 325
+        }
+      ]
+    },
+    {
+      "id": "ann",
+      "label": "向量索引",
+      "sublabel": "PHnsw",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/store/phnsw/phnsw.cpp",
+          "line": 33,
+          "end_line": 103
+        }
+      ]
+    },
+    {
+      "id": "db",
+      "label": "store.db",
+      "sublabel": "SQLite metadata",
+      "type": "database",
+      "sources": [
+        {
+          "path": "src/spc/spc_pipeline.cpp",
+          "line": 872,
+          "end_line": 942
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": "m0",
+      "from": "spc",
+      "to": "coord",
+      "label": "BeginWrite(doc, block_ids, false)",
+      "y": 180
+    },
+    {
+      "id": "m1",
+      "from": "coord",
+      "to": "pwl",
+      "label": "append PENDING / group commit",
+      "y": 225
+    },
+    {
+      "id": "m2",
+      "from": "coord",
+      "to": "spc",
+      "label": "TxnHandle",
+      "y": 270,
+      "variant": "return",
+      "note": "上传 blob 已在 upload 层保存；本路径不要求 blob 检查"
+    },
+    {
+      "id": "m3",
+      "from": "spc",
+      "to": "db",
+      "label": "UpsertDocFts5Row",
+      "y": 350
+    },
+    {
+      "id": "m4",
+      "from": "spc",
+      "to": "ann",
+      "label": "AddPoints",
+      "y": 395,
+      "note": "HNSW 先写 WAL 并 fdatasync，再应用内存图"
+    },
+    {
+      "id": "m5",
+      "from": "spc",
+      "to": "db",
+      "label": "parents / blocks / 辅助字段",
+      "y": 475
+    },
+    {
+      "id": "m6",
+      "from": "spc",
+      "to": "coord",
+      "label": "成功 → Commit；核心失败 → Rollback",
+      "y": 520,
+      "note": "辅助字段可能 fail-soft；不是跨存储 SQL transaction"
+    },
+    {
+      "id": "m7",
+      "from": "coord",
+      "to": "pwl",
+      "label": "COMMITTED / ROLLBACK 终态",
+      "y": 600
+    },
+    {
+      "id": "m8",
+      "from": "coord",
+      "to": "db",
+      "label": "重启后 probe blocks / 补偿清理",
+      "y": 645,
+      "note": "pending 无终态：主存储齐全推断提交，否则补偿"
+    },
+    {
+      "id": "m9",
+      "from": "coord",
+      "to": "ann",
+      "label": "重启后 probe points / 必要时删除",
+      "y": 725
+    },
+    {
+      "id": "m10",
+      "from": "coord",
+      "to": "pwl",
+      "label": "补终态与 compact",
+      "y": 770
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一般接口与本路径",
+      "items": [
+        "WriteCoordinator 一般支持 has_blob 探针；本次普通文档写入设 false。",
+        "Commit 终态日志失败可能返回错误但主数据已经写成，不能盲目重试。"
+      ]
+    }
+  ]
+}
